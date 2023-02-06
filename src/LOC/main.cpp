@@ -11,6 +11,7 @@ int main()
     countPhysicalLines();
     countLogicalLines();
     countCommentLines();
+    countBlankLines();
 
     printf("\n\n");
     printf("\t    *** Thank you for using CMC! ***\n\n\n");
