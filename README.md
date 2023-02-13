@@ -1,4 +1,4 @@
-# Software Project Lab-1
+> Software Project Lab-1
 # Code Metric Calculator
 ## Project Description:
 I will build a software tool named Code Metric Calculator(CMC). This calculator
@@ -20,3 +20,5 @@ refactoring or optimization, measuring the complexity of the code, Improving cod
 quality, measuring progress and so on.
 
 ## Prepared by: Umme Kulsum Tumpa
+## Roll: BSSE-1307
+## Supervised by: Abdus Satter
