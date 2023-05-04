@@ -3,14 +3,11 @@
 using namespace std;
 
 /*+++++++++++++++ variables and methods of MethodLevelLoc.h ++++++++++++++++++*/
-
 extern int total_method;
 extern void clearLOC();
 extern void methodSeparator(string &temp);
 
-
 /************************* Variables to be used *************************/
-
 int blank_line;
 int physical_line;
 int logical_statements;
@@ -23,7 +20,6 @@ bool multiple_line_comment_flag;
 int temp_statement_counter_per_line; // for counting total logical statements in a line
 
 /************************* Methods to be used *************************/
-
 int CalcLOC(string file_name);
 int onlyStatementCounter(string &temp, int start_index, int final_index);
 int findTheIndexAfterComment(string &temp , int start_index, int len );
@@ -35,9 +31,7 @@ void assignLineType(bool &flag_statement_line, bool &flag_comment_line);
 bool onlyCommentLineFinder(string &temp , int start_index, int final_index );
 bool emptyLineCounter(string &temp, int start_index, int final_index);
 
-
 /************************* method definations *************************/
-
 
 // Finds only comment lines
 bool onlyCommentLineFinder(string &temp , int start_index, int final_index ) {
@@ -49,7 +43,6 @@ bool onlyCommentLineFinder(string &temp , int start_index, int final_index ) {
     if(multiple_line_comment_flag == true) { 
         count_as_comment_line = true;
     }
-
 
     for(int i=start_index; i<len; i++) {
 
@@ -198,7 +191,6 @@ void assignLineType(bool &flag_statement_line, bool &flag_comment_line) {
 // analyze the source code line by line
 void singleLineAnalyzer (string &temp, int start_index, int final_index) {
 
-
     if(emptyLineCounter( temp, start_index, final_index ) == true) {
         blank_line++;
     }
@@ -235,7 +227,6 @@ void singleLineAnalyzer (string &temp, int start_index, int final_index) {
 
 }
 
-
 void javaAnalyzer(string file_name){
     
     ifstream input_file(file_name);
@@ -259,7 +250,6 @@ void javaAnalyzer(string file_name){
     input_file.close();
 }
 
-
 void initializeAllVariable(){
     
     // own variable initialize
@@ -278,7 +268,6 @@ void initializeAllVariable(){
     clearLOC();
 }
 
-
 void LOCResultPrinter(void) {
     
     printf("\n\n");
@@ -292,7 +281,6 @@ void LOCResultPrinter(void) {
     printf("Total Methods: %d\n\n", total_method);
 
 }
-
 
 int CalcLOC(string file_name){
 
