@@ -9,7 +9,6 @@ extern string comment_free_file;
 extern void nameAssign (string name ,int method_number);
 
 /************ Variables to be used ***************/
-
 string method_area_file = "methodArea.txt";
 string saved_file[5000];
 int save_file_size=0;
@@ -27,7 +26,6 @@ struct node {
 
 vector<node> method_tracer;
 
-
 /************ Methods to be used ****************/
 void measureComplexity();
 void methodDetector(string file_name);
@@ -39,14 +37,11 @@ string findStringBeforeFirstBrace(string line);
 
 void assignName(){
 
-    // Size of total methods
-    int temp_size = method_tracer.size();
+    int temp_size = method_tracer.size(); // Size of total methods
     for (int i = 0; i < temp_size; i++) {
 
-        // First line number of a method
-        int first_line = method_tracer[i].start_line;
-        // To store words obtained from analyzing the lines
-        string temp_words[10];
+        int first_line = method_tracer[i].start_line; // First line number of a method
+        string temp_words[10]; // To store words obtained from analyzing the lines
 
         int counter;
         string word;
@@ -59,9 +54,8 @@ void assignName(){
         }
 
         if (counter > 1) {
-            
-            // Method name will exist as the second word
-            method_tracer[i].name = temp_words[1];
+
+            method_tracer[i].name = temp_words[1]; // Method name will exist as the second word
             nameAssign(temp_words[1], i);
             method_tracer[i].name_flag = true;
             continue;
@@ -79,8 +73,7 @@ void assignName(){
         }
         if (counter > 1) {
             
-            // Method name will exist as the second word
-            method_tracer[i].name = temp_words[1];
+            method_tracer[i].name = temp_words[1]; // Method name will exist as the second word
             method_tracer[i].name_flag = false;
             
         }
@@ -90,8 +83,7 @@ void assignName(){
 
 string findStringBeforeFirstBrace(string line){
 
-    // Location of the first opening parenthesis '('
-    int first_brace_position = -1;
+    int first_brace_position = -1; // Location of the first opening parenthesis '('
     int len = line.size();
 
     for (int i = 0; i < len; i++) {
@@ -100,30 +92,24 @@ string findStringBeforeFirstBrace(string line){
             first_brace_position = i;
         }
         else if (line[i] == '{') {
-            // Replace the opening brace with a space
-            line[i] = ' ';
-            // Exit the loop since we found the first opening brace
-            break;
+            line[i] = ' '; // Replace the opening brace with a space
+            break; // Exit the loop since we found the first opening brace
         }
     }
 
     // Check if an opening parenthesis was found
     if (first_brace_position != -1) {
-        // Return the substring before the first opening parenthesis
-        return line.substr(0, first_brace_position);
+        return line.substr(0, first_brace_position); // Return the substring before the first opening parenthesis
     } else {
-        // Return an empty string if no opening parenthesis was found
-        return "";
+        return ""; // Return an empty string if no opening parenthesis was found
     }
 
 }
 
 void saveInString(string file_name){
 
-    // Initialize the number of lines in the file
-    int save_file_size = 0;
-    // Opening the input file with ifstream
-    ifstream input_file(file_name);  
+    int save_file_size = 0; // Initialize the number of lines in the file
+    ifstream input_file(file_name);  // Opening the input file with ifstream
 
     //Check if the input file was successfully opened
     if(input_file.is_open()) {
@@ -141,8 +127,7 @@ void saveInString(string file_name){
         input_file.close();
     }
     else {
-        // Print an error message if the input file was not found
-        printf("File not found\n");
+        printf("File not found\n"); // Print an error message if the input file was not found
     }
 
 }
