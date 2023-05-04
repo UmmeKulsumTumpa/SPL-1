@@ -32,7 +32,7 @@ bool lengthForRequiredSubstring(string line, string target_sub_string){
     else{
         return false;
     }
-    
+
 }
 
 /*********************************************************/
@@ -236,7 +236,20 @@ void createCommentAndContentFreeFile(string file_name){
 
         // a string that is comment or blank line free
         string temp_line=createCommentFreeLine(line);
+
+        temp_line=createContentFreeLine(temp_line);
+
+        output_file<<temp_line;
+
+        getline(input_file, line);
+
     }
+
+    // closing of temporary comment and space free lines
+    output_file.close();
+    // closing the input file
+    input_file.close();
+
 }
 
 /*************************************************************************/
@@ -248,6 +261,7 @@ void calcComplexity(string file_name){
     /**********************************************/
 
     multiple_comment_line_flag_cc=false;
+    createCommentAndContentFreeFile(file_name);
 
 }
 
