@@ -115,7 +115,7 @@ void nameAssign (string name ,int method_number) {
 
 void locMethodBasedResult(int i){
 
-    cout<<"Method Name: "<<methodResult[i].name<<endl<<endl;
+    cout<<"Method Name: "<<methodResult[i].name<<"\n";
     printf("Physical Lines: %d\n", methodResult[i].physical_line );
     printf("Blank Lines: %d\n", methodResult[i].blank_line_method);
     printf("Lines of Logical Statement: %d\n", methodResult[i].total_logical_statements);
