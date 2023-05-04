@@ -27,9 +27,13 @@ bool lengthForRequiredSubstring(string line, string target_sub_string);
 bool lengthForRequiredSubstring(string line, string target_sub_string){
 
     if(line.find(target_sub_string)!=string::npos){
+        // If the target substring is found in the line
+        // string::npos is the constant representing "not found"
+        // If find() does not return npos, it means the substring is found
         return true;
     }
     else{
+        // If the target substring is not found in the line
         return false;
     }
 
@@ -41,57 +45,75 @@ bool lengthForRequiredSubstring(string line, string target_sub_string){
 
 string createContentFreeLine(string line){
 
-    int line_size = line.size();
+    // Variable to store the size of the input line
+    int line_size = line.size(); 
 
+    // Boolean flags to track whether a double quote or single quote is currently being processed
     bool flag_double_quote = false;
     bool flag_single_quote = false;
 
     // Removes the contents between single quote and double quote
-
+    // Loop through each character in the line
     for (int i = 0; i < line_size; i++) {
 
+        /***********************************************/
         // corresponding char for ASCII 39 is <'>
         // as we represent character inside 
         // single quote, so we have to use
         // corresponding ASCII value of <'>
+        /***********************************************/
 
+        // Check if the character is a single quote (ASCII value 39) or double quote
+        // and If neither single nor double quote is currently being processed
         if ((line[i] == 39 || line[i] == '"') && flag_double_quote == false && flag_single_quote == false) {
 
+            // If the character is a single quote, set the flag_single_quote to true
             if (line[i] == 39){
                 flag_single_quote = true;
             }
+            // If the character is a double quote, set the flag_double_quote to true
             else if (line[i] == '"') {
                 flag_double_quote = true;
             }
 
+            // Replace the character with a space to remove its content
             line[i] = ' ';
 
+            // Continue to the next character
             continue;
 
         }
+        // If a double quote is being processed
         else if (flag_double_quote == true) {
             
+            // If the character is a closing double quote, set flag_double_quote to false
             if (line[i] == '"') {
                 flag_double_quote = false;
             }
 
+            // Replace the character with a space
             line[i] = ' ';
 
         }
+        // If a single quote is being processed
         else if (flag_single_quote == true) {
             
+            // If the character is a closing single quote, set flag_single_quote to false
             if (line[i] == 39) {
                 flag_single_quote = false;
             }
 
+            // Replace the character with a space
             line[i] = ' ';
 
         }
     }
 
+    // Return the modified line with the contents between quotes removed
     return line;
 
 }
+
 
 /*********************************************************/
 // function that removes comments and blank lines
@@ -100,13 +122,18 @@ string createContentFreeLine(string line){
 
 string createCommentFreeLine(string line){
 
+    // This function takes a string 'line' as input 
+    // and returns a modified string with comments removed.
+
+    // Declare variables for the target substring and length check.
     string target_sub_string;
     bool len;
 
     // if the line contains "package" keyword
     // we will ignore the line
-
+    // Set the target_sub_string to "package" which is a keyword to be ignored.
     target_sub_string="package";
+    // Check the length of the required substring in the line.
     len=lengthForRequiredSubstring(line, target_sub_string);
 
     // now if line coinains target_sub_string
@@ -120,8 +147,9 @@ string createCommentFreeLine(string line){
 
     // if the line contains "import" keyword
     // we will ignore the line
-
+    // Set the target_sub_string to "import" which is a keyword to be ignored.
     target_sub_string="import";
+    // Check the length of the required substring in the line.
     len=lengthForRequiredSubstring(line, target_sub_string);
 
     if(len){
@@ -131,7 +159,7 @@ string createCommentFreeLine(string line){
     }
 
     // ignores blank lines
-
+    // the line is empty, so return an empty string
     if(line.size() == 0){
         return "";
     }
@@ -188,7 +216,7 @@ string createCommentFreeLine(string line){
         }
         else if(line[i] == '/' && line[i+1] == '/') {
             
-            //if single line comment character is reached, then we ignore the next characters in that line
+            // If the single line comment character is reached, then we ignore the rest of the line
 
             for(int j=i ; j<line_size; j++) {
                 line[j] = ' ';
