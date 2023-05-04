@@ -51,12 +51,13 @@ void assignName(){
         istringstream iss(findStringBeforeFirstBrace(saved_file[first_line]));
         for (counter = 0; iss >> word; counter++) {
             temp_words[counter] = word;
+            // cout << word << "\n";
         }
 
         if (counter > 1) {
 
-            method_tracer[i].name = temp_words[1]; // Method name will exist as the second word
-            nameAssign(temp_words[1], i);
+            method_tracer[i].name = temp_words[counter-1]; // Method name will exist as the second word
+            nameAssign(temp_words[counter-1], i);
             method_tracer[i].name_flag = true;
             continue;
 
@@ -68,12 +69,12 @@ void assignName(){
         for (counter = 0; iss1 >> word; counter++) {
             
             temp_words[counter] = word;
-            nameAssign(temp_words[1], i);
 
         }
         if (counter > 1) {
             
-            method_tracer[i].name = temp_words[1]; // Method name will exist as the second word
+            nameAssign(temp_words[counter-1], i);
+            method_tracer[i].name = temp_words[counter-1]; // Method name will exist as the second word
             method_tracer[i].name_flag = false;
             
         }
@@ -108,7 +109,7 @@ string findStringBeforeFirstBrace(string line){
 
 void saveInString(string file_name){
 
-    int save_file_size = 0; // Initialize the number of lines in the file
+    save_file_size = 0; // Initialize the number of lines in the file
     ifstream input_file(file_name);  // Opening the input file with ifstream
 
     //Check if the input file was successfully opened
@@ -146,14 +147,14 @@ void methodDetector(string file_name){
 
         for (int j = 0; j < str_len; j++) {
             // Check for the opening brace '{' when double quotes stack is empty and the first bracket stack size is 2
-            if (double_quote.empty() && saved_file[i][j] == '{' && first_bracket.size() == 2) {
+            if (first_bracket.size() == 2 and double_quote.empty() && saved_file[i][j] == '{') {
                 
                 temp_node.start_line = i;
                 double_quote.push('{');
 
             }
             // Check for the closing brace '}' when double quotes stack size is 1 and the first bracket stack size is 2
-            else if (double_quote.size() == 1 && saved_file[i][j] == '}' && first_bracket.size() == 2) {
+            else if (first_bracket.size() == 2 and double_quote.size() == 1 && saved_file[i][j] == '}') {
                 
                 temp_node.finish_line = i;
                 method_tracer.push_back(temp_node);
@@ -163,19 +164,19 @@ void methodDetector(string file_name){
 
             }
             // Check for the opening brace '{' and push it to the double quotes stack
-            else if (saved_file[i][j] == '{') {
+            else if (saved_file[i][j] == '{' and first_bracket.empty()==false) {
                 double_quote.push('{');
             }
             // Check for the closing brace '}' and pop it from the double quotes stack
-            else if (saved_file[i][j] == '}') {
+            else if (saved_file[i][j] == '}' and first_bracket.empty()==false) {
                 double_quote.pop();
             }
             // Check for '()' when double quotes stack is empty and first bracket stack is empty
             // (Assuming it is checking for parentheses used in function calls)
-            else if (saved_file[i][j] == '(' && double_quote.empty() && first_bracket.empty()) {
+            else if (first_bracket.empty() and double_quote.empty() and saved_file[i][j] == '(') {
                 first_bracket.push('(');
             }
-            else if (saved_file[i][j] == ')' && double_quote.empty() && first_bracket.size() == 1) {
+            else if (first_bracket.size() == 1 and double_quote.empty() and saved_file[i][j] == ')') {
                 first_bracket.push(')');
             }
         }
@@ -186,13 +187,14 @@ void methodDetector(string file_name){
 
     // Assign a name to each method
     assignName();
-
-
 }
 
 void measureComplexity(){
 
-
+    methodDetector(comment_free_file);
+    // for(int i=0;i<method_tracer.size();i++){
+    //     cout << method_tracer[i].name << "\n";
+    // }
 
 }
 
