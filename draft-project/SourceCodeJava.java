@@ -1,4 +1,4 @@
-package com.test;
+//package com.test;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -14,7 +14,8 @@ public class SourceCodeJava{
         return (a>b) ? true : false;
     }
 
-    private static int check(){
+    private static int check()
+    {
         return 2;
     }
 
