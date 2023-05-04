@@ -32,9 +32,64 @@ bool lengthForRequiredSubstring(string line, string target_sub_string){
     else{
         return false;
     }
+    
 }
 
+/*********************************************************/
+// erases the comment between ()
+/*********************************************************/
+
 string createContentFreeLine(string line){
+
+    int line_size = line.size();
+
+    bool flag_double_quote = false;
+    bool flag_single_quote = false;
+
+    // Removes the contents between single quote and double quote
+
+    for (int i = 0; i < line_size; i++) {
+
+        // corresponding char for ASCII 39 is <'>
+        // as we represent character inside 
+        // single quote, so we have to use
+        // corresponding ASCII value of <'>
+
+        if ((line[i] == 39 || line[i] == '"') && flag_double_quote == false && flag_single_quote == false) {
+
+            if (line[i] == 39){
+                flag_single_quote = true;
+            }
+            else if (line[i] == '"') {
+                flag_double_quote = true;
+            }
+
+            line[i] = ' ';
+
+            continue;
+
+        }
+        else if (flag_double_quote == true) {
+            
+            if (line[i] == '"') {
+                flag_double_quote = false;
+            }
+
+            line[i] = ' ';
+
+        }
+        else if (flag_single_quote == true) {
+            
+            if (line[i] == 39) {
+                flag_single_quote = false;
+            }
+
+            line[i] = ' ';
+
+        }
+    }
+
+    return line;
 
 }
 
@@ -60,7 +115,7 @@ string createCommentFreeLine(string line){
     if(len){
         // we found the target string in the line
         // so return
-        return "";
+        return "";    
     }
 
     // if the line contains "import" keyword
@@ -152,7 +207,8 @@ string createCommentFreeLine(string line){
     // }
 
     // This is the case when the whole line is comprised of space or carriage return character
-    return "";
+    
+    return line;
 
 }
 
