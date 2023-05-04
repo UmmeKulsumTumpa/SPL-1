@@ -3,27 +3,20 @@
 using namespace std;
 
 /************ Variables to be used ***************/
-
 bool multiple_comment_line_flag_cc = false;
 string comment_free_file = "commentFreeFile.txt";
 
-
 /************ Methods to be used ************/
-
 void calcComplexity(string file_name);
 void createCommentAndContentFreeFile(string file_name);
 string createCommentFreeLine(string line);
 string createContentFreeLine(string line);
 bool lengthForRequiredSubstring(string line, string target_sub_string);
 
-
 /********** Methods definations *************/
 
-
-/*******************************************/
 // if line coinains target_sub_string
 // the length of find() > 0
-/*******************************************/
 bool lengthForRequiredSubstring(string line, string target_sub_string){
 
     if(line.find(target_sub_string)!=string::npos){
@@ -33,16 +26,12 @@ bool lengthForRequiredSubstring(string line, string target_sub_string){
         return true;
     }
     else{
-        // If the target substring is not found in the line
-        return false;
+        return false; // If the target substring is not found in the line
     }
 
 }
 
-/*********************************************************/
 // erases the comment between ()
-/*********************************************************/
-
 string createContentFreeLine(string line){
 
     // Variable to store the size of the input line
