@@ -2,6 +2,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+/************ method from other file*************/
+extern void measureComplexity(void);
+
 /************ Variables to be used ***************/
 bool multiple_comment_line_flag_cc = false;
 string comment_free_file = "commentFreeFile.txt";
@@ -277,9 +280,9 @@ void createCommentAndContentFreeFile(string file_name){
 void calcComplexity(string file_name){
 
     /**********************************************/
-
     multiple_comment_line_flag_cc=false;
     createCommentAndContentFreeFile(file_name);
+    measureComplexity();    
 
 }
 
