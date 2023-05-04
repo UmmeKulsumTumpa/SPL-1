@@ -3,6 +3,7 @@
 #include "LOC.h"
 #include "MethodLevelLOC.h"
 #include "CyclomaticComplexity.h"
+#include "ComplexityAnalyzer.h"
 
 using namespace std;
 
@@ -40,6 +41,6 @@ void executeCalculation(string file_name){
     
     CalcLOC(file_name);
     LOCResultPrinter();
-    detailedResultPrinter();
     calcComplexity(file_name);
+    detailedResultPrinter();
 }
