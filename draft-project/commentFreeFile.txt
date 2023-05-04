@@ -14,7 +14,8 @@ public class SourceCodeJava{
         return (a>b) ? true : false;
     }
 
-    private static int check(){
+    private static int check()
+    {
         return 2;
     }
 
