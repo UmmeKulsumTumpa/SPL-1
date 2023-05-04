@@ -268,6 +268,7 @@ void createCommentAndContentFreeFile(string file_name){
         temp_line=createContentFreeLine(temp_line);
 
         output_file<<temp_line;
+        output_file<<"\n";
 
         getline(input_file, line);
 
