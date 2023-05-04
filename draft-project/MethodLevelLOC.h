@@ -3,15 +3,12 @@
 using namespace std;
 
 /*++++++++++++++++++++++++++++++++++ variable of LOC.h ++++++++++++++++++++++++++++++++++++++ */
-
 int temp_statement_counter_per_line2;
 
 /*+++++++++++++++++++++++++++++++++ methods of LOC.h ++++++++++++++++++++++++++++++++++++++++*/
-
 extern bool emptyLineCounter(string &temp, int start_index, int final_index);
 
 /********************************* Variables to be used **************************************/
-
 int total_method;
 bool multiple_line_comment_flag2 = false;
 
@@ -38,7 +35,6 @@ vector <Node> methodResult;
 
 
 /*********************************** Methods to be used ***********************************/
-
 void clearLOC(void);
 void locMethodBasedResult(int i);
 void locNodeInitializer (string temp);
@@ -55,7 +51,6 @@ int findTheEndOfComment2(string &temp , int start_index, int len );
 
 
 /************************************* method defination ***********************************/
-
 
 bool findPositionOfMethodName(string temp) {
 
@@ -87,13 +82,11 @@ bool findPositionOfMethodName(string temp) {
 
 }
 
-
 //Clear data for methods
 void clearLOC(void) {
     
     methodResult.clear();
 }
-
 
 //Initializes locNode result to zero
 void locNodeInitializer (string temp) {
@@ -114,7 +107,6 @@ void locNodeInitializer (string temp) {
 
 }
 
-
 /* Assigns the name of the method calculated from cyclomatic complexity*/
 void nameAssign (string name ,int method_number) {
     
@@ -133,12 +125,9 @@ void locMethodBasedResult(int i){
 
 }
 
-
 int getLoc(int i) {
-
     return methodResult[i].total_logical_statements;
 }
-
 
 int findTheEndOfComment2(string &temp , int start_index, int len ) {
 
@@ -155,7 +144,6 @@ int findTheEndOfComment2(string &temp , int start_index, int len ) {
 
     return 0;
 }
-
 
 /* This method is same as singleLineAnalyzer in file1
     Defined here again because had problem in linking. I should have use OOP because of this -_-
@@ -222,7 +210,6 @@ bool onlyCommentLineMethodFinder2(string &temp , int start_index, int final_inde
         countAsCommentLine = true;
     }
 
-
     for(int i=start_index ; i<len; i++) {
 
         if(temp[i]==' ') {
@@ -268,10 +255,8 @@ void assignLineType2(bool &flag_statement_line, bool &flag_comment_line) {
         locNode.only_comment_line_method--;
 
     }
-    else if(flag_statement_line == true) {
-        
+    else if(flag_statement_line == true) {      
         locNode.only_statment_lines++;
-        
     }
 
 }
