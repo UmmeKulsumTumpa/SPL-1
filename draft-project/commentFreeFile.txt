@@ -1,0 +1,62 @@
+
+
+
+
+
+
+public class SourceCodeJava{
+    
+    public static int summationOfTwoNumbers(int a, int b){
+        return a+b;        
+    }
+
+    public static boolean isGreater(int a, int b){
+        return (a>b) ? true : false;
+    }
+
+    private static int check(){
+        return 2;
+    }
+
+    public static void main(String[] args){
+        System.out.println(       );
+        System.out.println(                            );
+                              
+        System.out.println(                                                       );
+          
+                          
+           
+
+        int a=10, b=20;                   
+
+           
+                    
+                         
+                  
+           
+
+        int sum=summationOfTwoNumbers(a,b);
+
+                                        
+
+        System.out.printf(                ,a,b,sum);
+
+          
+                                   
+                    
+          
+
+        boolean flag=isGreater(a, b);
+
+        if(flag){
+            System.out.printf(                         , a, b);
+        }
+        else{
+            System.out.printf(                         , a, b);
+        }
+    }
+
+    public static void msg(){
+        System.out.println(           );
+    }
+}
