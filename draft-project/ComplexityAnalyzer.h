@@ -31,9 +31,74 @@ void measureComplexity();
 void methodDetector(string file_name);
 void saveInString(string file_name);
 void assignName();
+void calculation(void);
+int countDoubleCharacaterPredicates(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
 
 /************ Methods definations **************/
+
+
+
+
+int countDoubleCharacaterPredicates(int first_line, int last_line){
+
+    int temp_complexity = 0;  // Variable to store the complexity count
+    int temp_complexity_inside_bracket=0;
+    bool found_open_parenthesis = false;  // Flag to track if an open parenthesis has been found
+
+    for (int i = first_line; i <= last_line; i++) {  // Loop through the lines
+        
+        int temp_line_size = saved_file[i].size() - 1;  // Get the size of the current line
+
+        for (int j = 0; j < temp_line_size; j++) {  // Loop through each character in the line
+
+            if (saved_file[i][j] == '(') {
+                found_open_parenthesis = true;  // Set the flag when an open parenthesis is found
+            }
+            else if (found_open_parenthesis && saved_file[i][j] == ')') {
+                // If an open parenthesis has been found and there are already two-character operators,
+                // increment complexity count and reset the flag
+                temp_complexity+=temp_complexity_inside_bracket;
+                found_open_parenthesis = false;
+                temp_complexity_inside_bracket=0;
+            }
+            else if (found_open_parenthesis && temp_complexity_inside_bracket == 0) {
+                // If an open parenthesis has been found and no two-character operators have been encountered yet,
+                // check for two-character operators and increment complexity count accordingly
+                if (saved_file[i][j] == '=' && saved_file[i][j + 1] == '=') {
+                    temp_complexity_inside_bracket++;
+                }
+                else if (saved_file[i][j] == '>' && saved_file[i][j + 1] == '=') {
+                    temp_complexity_inside_bracket++;
+                }
+                else if (saved_file[i][j] == '<' && saved_file[i][j + 1] == '=') {
+                    temp_complexity_inside_bracket++;
+                }
+                else if (saved_file[i][j] == '!' && saved_file[i][j + 1] == '=') {
+                    temp_complexity_inside_bracket++;
+                }
+            }
+        }
+    }
+
+    return temp_complexity;  // Return the calculated complexity count
+
+}
+
+void calculation(void){
+
+    int temp_size = method_tracer.size();
+
+    for (int i=0;i<temp_size;i++){
+
+        int first_line=method_tracer[i].start_line;
+        int last_line=method_tracer[i].finish_line;
+
+        int complexity_per_method=countDoubleCharacaterPredicates(first_line, last_line);
+        cout << method_tracer[i].name << " " << complexity_per_method << "\n";
+    }
+    cout << "\n";
+}
 
 void assignName(){
 
@@ -195,6 +260,8 @@ void measureComplexity(){
     // for(int i=0;i<method_tracer.size();i++){
     //     cout << method_tracer[i].name << "\n";
     // }
+
+    calculation();
 
 }
 
