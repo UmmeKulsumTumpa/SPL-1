@@ -7,11 +7,15 @@ import java.util.LinkedList;
 public class SourceCodeJava{
     
     public static int summationOfTwoNumbers(int a, int b){
+        if(a>=b && b!=0){
+            System.out.println("testing");
+        }
         return a+b; // adds
     }
 
     public static boolean isGreater(int a, int b){
-        return (a>b) ? true : false;
+        if(a!=b && b!=11 || a!=12){System.out.println("");}
+        return (a>=b) ? true : false;
     }
 
     private static int check()
@@ -49,11 +53,18 @@ public class SourceCodeJava{
 
         boolean flag=isGreater(a, b);
 
-        if(flag){
+        if(flag==true){
             System.out.printf("%d is greater than %d\n", a, b);
         }
         else{
             System.out.printf("%d is smaller than %d\n", a, b);
+        }
+
+        if(a!=10 || b==56 && a!=b){
+
+        }
+        else if(b==2){
+            
         }
     }
 
