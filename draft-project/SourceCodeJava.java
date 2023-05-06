@@ -20,7 +20,14 @@ public class SourceCodeJava{
 
     private static int check()
     {
-        return 2;
+        if(11<12 && 13>12){
+
+        }
+
+        if(14-2>0){
+            System.out.println();
+        }
+        
     }
 
     public static void main(String[] args){
@@ -66,9 +73,21 @@ public class SourceCodeJava{
         else if(b==2){
             
         }
+        else if(a>0){
+            System.out.println();
+        }
     }
 
     public static void msg(){
         System.out.println("So tired!");
+
+        if(12>0){
+            System.out.println();
+        }
+        
+        // still can't handle single and double together -_-
+        if(-12<=0 || -8<0){
+            System.out.println();
+        }
     }
 }
