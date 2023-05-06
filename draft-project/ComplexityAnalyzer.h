@@ -37,6 +37,52 @@ string findStringBeforeFirstBrace(string line);
 
 /************ Methods definations **************/
 
+// Count the occurrences of single character predicates in a range of lines
+int countSingleCharacterPredicates(int first_line, int last_line) {
+
+    int temp_complexity = 0;
+    int temp_complexity_inside_bracket=0;
+    bool found_open_parenthesis = false;  // Flag to track if an open parenthesis has been found
+    
+    // Iterate through each line within the specified range
+    for(int i = first_line; i <= last_line; i++) {
+
+        int temp_line_size = saved_file[i].size() - 1; // Get the size of the current line
+        
+        // Iterate through each character in the line
+        for(int j = 0; j < temp_line_size; j++) {
+
+            if (saved_file[i][j] == '(') {
+                found_open_parenthesis = true;  // Set the flag when an open parenthesis is found
+            }
+            else if (found_open_parenthesis && saved_file[i][j] == ')') {
+                
+                temp_complexity+=temp_complexity_inside_bracket;
+                found_open_parenthesis = false;
+                temp_complexity_inside_bracket=0;
+
+            }
+            else if (found_open_parenthesis && temp_complexity_inside_bracket == 0) {
+                
+                // Check for specific combinations of characters and skip to the next iteration if matched
+                if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '>') continue;
+                else if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '=') continue;
+                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '=') continue;
+                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '<') continue;
+                else if(saved_file[i][j] == '!' && saved_file[i][j + 1] == '=') continue;
+                
+                // Increment the complexity count if a single character predicate is found
+                else if(saved_file[i][j] == '<') temp_complexity_inside_bracket++;
+                else if(saved_file[i][j] == '>') temp_complexity_inside_bracket++;
+                else if(saved_file[i][j] == '!') temp_complexity_inside_bracket++;
+
+            }
+        }
+    }
+
+    // Return the final complexity count
+    return temp_complexity;
+}
 
 
 
@@ -94,8 +140,14 @@ void calculation(void){
         int first_line=method_tracer[i].start_line;
         int last_line=method_tracer[i].finish_line;
 
-        int complexity_per_method=countDoubleCharacaterPredicates(first_line, last_line);
-        cout << method_tracer[i].name << " " << complexity_per_method << "\n";
+        cout << "Double char logical st count: ";
+        int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
+        cout << method_tracer[i].name << " " << double_char_logic_count << "\n";
+        cout << "Single char logical st count: ";
+        int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
+        cout << method_tracer[i].name << " " << single_char_logic_count << "\n";
+
+        int complexity_per_method=double_char_logic_count+single_char_logic_count;
     }
     cout << "\n";
 }
