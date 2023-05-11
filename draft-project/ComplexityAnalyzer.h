@@ -31,7 +31,7 @@ void measureComplexity();
 void methodDetector(string file_name);
 void saveInString(string file_name);
 void assignName();
-void calculation(void);
+void calculation();
 int countDoubleCharacaterPredicates(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
 
@@ -43,7 +43,8 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
     int temp_complexity = 0;
     int temp_complexity_inside_bracket=0;
     bool found_open_parenthesis = false;  // Flag to track if an open parenthesis has been found
-    
+    bool skip_single_predicate = false;  // Flag to track if a single character predicate should be skipped
+
     // Iterate through each line within the specified range
     for(int i = first_line; i <= last_line; i++) {
 
@@ -53,28 +54,64 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
         for(int j = 0; j < temp_line_size; j++) {
 
             if (saved_file[i][j] == '(') {
+                
                 found_open_parenthesis = true;  // Set the flag when an open parenthesis is found
+                skip_single_predicate = false;  // Reset the flag when a new parenthesis is found
+
             }
             else if (found_open_parenthesis && saved_file[i][j] == ')') {
                 
-                temp_complexity+=temp_complexity_inside_bracket;
+                if(skip_single_predicate==false){
+                    temp_complexity+=temp_complexity_inside_bracket;
+                }
                 found_open_parenthesis = false;
+                skip_single_predicate = false;
                 temp_complexity_inside_bracket=0;
 
             }
-            else if (found_open_parenthesis && temp_complexity_inside_bracket == 0) {
+            else if (found_open_parenthesis) {
                 
                 // Check for specific combinations of characters and skip to the next iteration if matched
-                if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '>') continue;
-                else if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '=') continue;
-                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '=') continue;
-                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '<') continue;
-                else if(saved_file[i][j] == '!' && saved_file[i][j + 1] == '=') continue;
+                if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '>'){ 
+                    skip_single_predicate=true;
+                    continue;
+                }
+                else if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '='){ 
+                    skip_single_predicate=true;
+                    continue;
+                }
+                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '='){ 
+                    skip_single_predicate=true;
+                    continue;
+                }
+                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '<'){ 
+                    skip_single_predicate=true;
+                    continue;
+                }
+                else if(saved_file[i][j] == '!' && saved_file[i][j + 1] == '='){ 
+                    skip_single_predicate=true;
+                    continue;
+                }
+
+                // Skip the single character predicate if a two-character operator was found before it inside the first parenthesis
+                if (skip_single_predicate && (saved_file[i][j] == '<' || saved_file[i][j] == '>' || saved_file[i][j] == '!')) {
+                    continue;
+                }
+
+                if(temp_complexity_inside_bracket>0){
+                    continue;
+                }
                 
                 // Increment the complexity count if a single character predicate is found
-                else if(saved_file[i][j] == '<') temp_complexity_inside_bracket++;
-                else if(saved_file[i][j] == '>') temp_complexity_inside_bracket++;
-                else if(saved_file[i][j] == '!') temp_complexity_inside_bracket++;
+                else if(saved_file[i][j] == '<') {
+                    temp_complexity_inside_bracket++;
+                }
+                else if(saved_file[i][j] == '>') {
+                    temp_complexity_inside_bracket++;
+                }
+                else if(saved_file[i][j] == '!') {
+                    temp_complexity_inside_bracket++;
+                }
 
             }
         }
