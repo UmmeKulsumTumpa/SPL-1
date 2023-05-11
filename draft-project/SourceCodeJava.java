@@ -18,7 +18,7 @@ public class SourceCodeJava{
         return (a>=b) ? true : false;
     }
 
-    private static int check()
+    private static void check()
     {
         if(11<12 && 13>12){
 
@@ -85,9 +85,25 @@ public class SourceCodeJava{
             System.out.println();
         }
         
-        // still can't handle single and double together -_-
+        // still can't handle single and double together -_-, maybe now it can handle
         if(-12<=0 || -8<0){
             System.out.println();
+        }
+    }
+
+    private void testMethod(int a, int b){
+        if(a>b && a!=b){
+
+        }
+        else if(a==b || b<14){
+
+        }
+
+        if(a<=b){
+
+        }
+        else if(b>a){
+            
         }
     }
 }
