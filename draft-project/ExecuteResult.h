@@ -11,15 +11,14 @@ using namespace std;
 extern void LOCResultPrinter();
 
 /*++++++++++++++++++++++++++++ variables & methods of MethodLevelLOC.h ++++++++++++++++++++++++++*/
-
 extern int total_method; // total number of methods detected in the source code
-
 extern void locMethodBasedResult(int i);
 
-
+/*++++++++++++++++++++++++++++ variables & methods of ComplexityAnalyzer.h ++++++++++++++++++++++++++*/
+extern void printComplexityPerMethod(int index_number);
+extern float average_complexity;
 
 /****************************** Methods to be used *******************************/
-
 void detailedResultPrinter();
 void executeCalculation(string file_name);
 
@@ -32,6 +31,7 @@ void detailedResultPrinter(){
     for(int i=0;i<total_method;i++){
 
         locMethodBasedResult(i);
+        printComplexityPerMethod(i);
     }
 }
 
