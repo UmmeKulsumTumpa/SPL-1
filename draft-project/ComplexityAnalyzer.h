@@ -32,12 +32,31 @@ void methodDetector(string file_name);
 void saveInString(string file_name);
 void assignName();
 void calculation();
+void calculateAverageComplexity();
+void printComplexityPerMethod(int index_number);
 int countPredicates(int first_line, int last_line);
 int countDoubleCharacaterPredicates(int first_line, int last_line);
 int countSingleCharacterPredicates(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
 
 /************ Methods definations **************/
+
+void printComplexityPerMethod(int index_number){
+    printf("Cyclomatic Complexity : %d\n\n", method_tracer[index_number].complexity);
+}
+
+void calculateAverageComplexity(){
+
+    float average_complexity = 0.0;
+    int temp_total_method = method_tracer.size();
+
+    for(int i=0; i<temp_total_method; i++) {
+        average_complexity += method_tracer[i].complexity;
+    }
+
+    average_complexity = average_complexity / (float)temp_total_method;
+
+}
 
 // Count the occurrences of single character predicates in a range of lines
 int countSingleCharacterPredicates(int first_line, int last_line) {
@@ -50,7 +69,7 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
     // Iterate through each line within the specified range
     for(int i = first_line; i <= last_line; i++) {
 
-        int temp_line_size = saved_file[i].size() - 1; // Get the size of the current line
+        int temp_line_size = saved_file[i].size(); // Get the size of the current line
         
         // Iterate through each character in the line
         for(int j = 0; j < temp_line_size; j++) {
@@ -119,8 +138,6 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
     return temp_complexity;
 }
 
-
-
 int countDoubleCharacaterPredicates(int first_line, int last_line){
 
     int temp_complexity = 0;  // Variable to store the complexity count
@@ -129,7 +146,7 @@ int countDoubleCharacaterPredicates(int first_line, int last_line){
 
     for (int i = first_line; i <= last_line; i++) {  // Loop through the lines
         
-        int temp_line_size = saved_file[i].size() - 1;  // Get the size of the current line
+        int temp_line_size = saved_file[i].size();  // Get the size of the current line
 
         for (int j = 0; j < temp_line_size; j++) {  // Loop through each character in the line
 
@@ -168,14 +185,21 @@ int countDoubleCharacaterPredicates(int first_line, int last_line){
 
 int countPredicates(int first_line, int last_line){
 
-    int temp_complexity;
-    // cout << "Double char logical st count: ";
+    int temp_complexity=0;
     int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
-    // cout << method_tracer[i].name << " " << double_char_logic_count << "\n";
-    // cout << "Single char logical st count: ";
     int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
-    // cout << method_tracer[i].name << " " << single_char_logic_count << "\n";
-    temp_complexity=double_char_logic_count+single_char_logic_count;
+    temp_complexity+=(double_char_logic_count+single_char_logic_count);
+
+    // count each case in switch statements
+    for(int i=first_line;i<last_line;i++){
+        if(saved_file[i].find("case") != string::npos){
+            temp_complexity++;
+        }
+    }
+
+    temp_complexity++; // CC=D+1
+
+    return temp_complexity;
 }
 
 void calculation(void){
