@@ -9,7 +9,7 @@ extern string comment_free_file;
 extern void nameAssign (string name ,int method_number);
 
 /************ Variables to be used ***************/
-string method_area_file = "methodArea.txt";
+char method_area_file[] = "methodArea.txt";
 string saved_file[5000];
 int save_file_size=0;
 float average_complexity;
@@ -32,7 +32,9 @@ void methodDetector(string file_name);
 void saveInString(string file_name);
 void assignName();
 void calculation();
+int countPredicates(int first_line, int last_line);
 int countDoubleCharacaterPredicates(int first_line, int last_line);
+int countSingleCharacterPredicates(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
 
 /************ Methods definations **************/
@@ -72,7 +74,7 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
             else if (found_open_parenthesis) {
                 
                 // Check for specific combinations of characters and skip to the next iteration if matched
-                if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '>'){ 
+                if(saved_file[i][j] == '=' && saved_file[i][j + 1] == '='){ 
                     skip_single_predicate=true;
                     continue;
                 }
@@ -81,10 +83,6 @@ int countSingleCharacterPredicates(int first_line, int last_line) {
                     continue;
                 }
                 else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '='){ 
-                    skip_single_predicate=true;
-                    continue;
-                }
-                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '<'){ 
                     skip_single_predicate=true;
                     continue;
                 }
@@ -168,6 +166,18 @@ int countDoubleCharacaterPredicates(int first_line, int last_line){
 
 }
 
+int countPredicates(int first_line, int last_line){
+
+    int temp_complexity;
+    // cout << "Double char logical st count: ";
+    int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
+    // cout << method_tracer[i].name << " " << double_char_logic_count << "\n";
+    // cout << "Single char logical st count: ";
+    int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
+    // cout << method_tracer[i].name << " " << single_char_logic_count << "\n";
+    temp_complexity=double_char_logic_count+single_char_logic_count;
+}
+
 void calculation(void){
 
     int temp_size = method_tracer.size();
@@ -176,17 +186,15 @@ void calculation(void){
 
         int first_line=method_tracer[i].start_line;
         int last_line=method_tracer[i].finish_line;
-
-        cout << "Double char logical st count: ";
-        int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
-        cout << method_tracer[i].name << " " << double_char_logic_count << "\n";
-        cout << "Single char logical st count: ";
-        int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
-        cout << method_tracer[i].name << " " << single_char_logic_count << "\n";
-
-        int complexity_per_method=double_char_logic_count+single_char_logic_count;
+        int complexity_per_method=countPredicates(first_line, last_line);
+        method_tracer[i].complexity=complexity_per_method;
+        // cout << "Double char logical st count: ";
+        // int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
+        // cout << method_tracer[i].name << " " << double_char_logic_count << "\n";
+        // cout << "Single char logical st count: ";
+        // int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
+        // cout << method_tracer[i].name << " " << single_char_logic_count << "\n";
     }
-    cout << "\n";
 }
 
 void assignName(){
