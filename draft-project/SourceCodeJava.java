@@ -5,6 +5,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class SourceCodeJava{
+
+    String name;
+    String address;
+    int ID;
+
+    public SourceCodeJava(int ID){
+        this.ID=ID;
+    }
+
+    public SourceCodeJava(String name){
+        this.name=name;
+    }
+
+    public SourceCodeJava(String name, String address){
+        this.name=name;
+        this.address=address;
+    }
     
     public static int summationOfTwoNumbers(int a, int b){
         if(a>=b && b!=0){

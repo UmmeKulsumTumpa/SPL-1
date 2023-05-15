@@ -116,12 +116,12 @@ void nameAssign (string name ,int method_number) {
 void locMethodBasedResult(int i){
 
     cout<<"Method Name: "<<methodResult[i].name<<"\n";
-    printf("Physical Lines: %d\n", methodResult[i].physical_line );
-    printf("Blank Lines: %d\n", methodResult[i].blank_line_method);
-    printf("Lines of Logical Statement: %d\n", methodResult[i].total_logical_statements);
-    printf("Lines with only Comment: %d\n", methodResult[i].only_comment_line_method);
-    printf("Lines with both Comment and Statement: %d\n", methodResult[i].comment_and_statement_lines);
-    printf("Total Statement Lines: %d\n\n",  methodResult[i].only_statment_lines);
+    printf("Total Physical Lines: %d\n", methodResult[i].physical_line );
+    printf("Total Blank Lines: %d\n", methodResult[i].blank_line_method);
+    printf("Total Lines of Logical Statement: %d\n", methodResult[i].total_logical_statements);
+    printf("Number of only Comment Lines: %d\n", methodResult[i].only_comment_line_method);
+    printf("Number of only Statement Lines: %d\n",  methodResult[i].only_statment_lines);
+    printf("Number of both Comment and Statement Lines: %d\n", methodResult[i].comment_and_statement_lines);
 
 }
 

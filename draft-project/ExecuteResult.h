@@ -17,6 +17,7 @@ extern void locMethodBasedResult(int i);
 /*++++++++++++++++++++++++++++ variables & methods of ComplexityAnalyzer.h ++++++++++++++++++++++++++*/
 extern void printComplexityPerMethod(int index_number);
 extern float average_complexity;
+extern vector<node> method_tracer;
 
 /****************************** Methods to be used *******************************/
 void detailedResultPrinter();
@@ -29,7 +30,9 @@ void executeCalculation(string file_name);
 void detailedResultPrinter(){
 
     for(int i=0;i<total_method;i++){
-
+        if(method_tracer[i].constructor){
+            continue;
+        }
         locMethodBasedResult(i);
         printComplexityPerMethod(i);
     }
@@ -40,7 +43,7 @@ void detailedResultPrinter(){
 void executeCalculation(string file_name){
     
     CalcLOC(file_name);
-    LOCResultPrinter();
     calcComplexity(file_name);
+    LOCResultPrinter();
     detailedResultPrinter();
 }

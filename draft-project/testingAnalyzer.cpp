@@ -4,7 +4,6 @@ using namespace std;
 
 /************ Variable from CyclomaticComplexity.h ***************/
 extern string comment_free_file;
-extern string name_of_input_file_excluding_dot;
 
 /************ Method from MethodLevelLoc.h ***************/
 extern void nameAssign (string name ,int method_number);
@@ -13,7 +12,6 @@ extern void nameAssign (string name ,int method_number);
 char method_area_file[] = "methodArea.txt";
 string saved_file[5000];
 int save_file_size=0;
-int total_constructor_number;
 float average_complexity;
 
 struct node {
@@ -22,7 +20,6 @@ struct node {
     int finish_line;
     int complexity;
     bool name_flag; // true if exists in the line containing double brace
-    bool constructor=false;
     string name;
 
 } temp_node;
@@ -36,7 +33,6 @@ void saveInString(string file_name);
 void assignName();
 void calculation();
 void calculateAverageComplexity();
-void totalConstructorCounter();
 void printComplexityPerMethod(int index_number);
 int countPredicates(int first_line, int last_line);
 int countDoubleCharacaterPredicates(int first_line, int last_line);
@@ -245,9 +241,7 @@ void assignName(){
         }
 
         if (counter > 1) {
-            if(temp_words[counter-1]==name_of_input_file_excluding_dot){
-                method_tracer[i].constructor=true;
-            }
+
             method_tracer[i].name = temp_words[counter-1]; // Method name will exist as the second word
             nameAssign(temp_words[counter-1], i);
             method_tracer[i].name_flag = true;
@@ -264,9 +258,7 @@ void assignName(){
 
         }
         if (counter > 1) {
-            if(temp_words[counter-1]==name_of_input_file_excluding_dot){
-                method_tracer[i].constructor=true;
-            }
+            
             nameAssign(temp_words[counter-1], i);
             method_tracer[i].name = temp_words[counter-1]; // Method name will exist as the second word
             method_tracer[i].name_flag = false;
@@ -325,15 +317,6 @@ void saveInString(string file_name){
         printf("File not found\n"); // Print an error message if the input file was not found
     }
 
-}
-
-void totalConstructorCounter(){
-    total_constructor_number=0;
-    for(int i=0;i<total_method;i++){
-        if(method_tracer[i].constructor){
-            total_constructor_number++;
-        }
-    }
 }
 
 void methodDetector(string file_name){
@@ -398,7 +381,6 @@ void measureComplexity(){
     // for(int i=0;i<method_tracer.size();i++){
     //     cout << method_tracer[i].name << "\n";
     // }
-    totalConstructorCounter();
 
     calculation();
 
