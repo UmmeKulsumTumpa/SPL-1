@@ -36,6 +36,7 @@ void detailedResultPrinter(){
         locMethodBasedResult(i);
         printComplexityPerMethod(i);
     }
+    printf("\n\n\n");
 }
 
 
