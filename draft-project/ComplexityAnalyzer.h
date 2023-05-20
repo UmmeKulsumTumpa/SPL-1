@@ -342,6 +342,7 @@ void methodDetector(string file_name){
 
     stack<char> double_quote;
     stack<char> first_bracket;
+    int method_first_line;
     method_tracer.clear();
 
     for (int i = 0; i < save_file_size; i++) {
@@ -352,7 +353,7 @@ void methodDetector(string file_name){
             // Check for the opening brace '{' when double quotes stack is empty and the first bracket stack size is 2
             if (first_bracket.size() == 2 and double_quote.empty() && saved_file[i][j] == '{') {
                 
-                temp_node.start_line = i;
+                temp_node.start_line = method_first_line;
                 double_quote.push('{');
 
             }
@@ -360,6 +361,7 @@ void methodDetector(string file_name){
             else if (first_bracket.size() == 2 and double_quote.size() == 1 && saved_file[i][j] == '}') {
                 
                 temp_node.finish_line = i;
+                //cout << "strart " << temp_node.start_line << " finish " << temp_node.finish_line << "\n";
                 method_tracer.push_back(temp_node);
                 double_quote.pop();
                 first_bracket.pop();
@@ -369,6 +371,7 @@ void methodDetector(string file_name){
             // Check for the opening brace '{' and push it to the double quotes stack
             else if (saved_file[i][j] == '{' and first_bracket.empty()==false) {
                 double_quote.push('{');
+                //cout << i << " " << j << "\n";
             }
             // Check for the closing brace '}' and pop it from the double quotes stack
             else if (saved_file[i][j] == '}' and first_bracket.empty()==false) {
@@ -378,11 +381,14 @@ void methodDetector(string file_name){
             // (Assuming it is checking for parentheses used in function calls)
             else if (first_bracket.empty() and double_quote.empty() and saved_file[i][j] == '(') {
                 first_bracket.push('(');
+                method_first_line=i;
+                // cout << method_first_line << "\n";
             }
             else if (first_bracket.size() == 1 and double_quote.empty() and saved_file[i][j] == ')') {
                 first_bracket.push(')');
             }
         }
+        //cout << "line " << i << " {} size: " << double_quote.size() << " () size: " << first_bracket.size() << "\n";
 
     }
 
