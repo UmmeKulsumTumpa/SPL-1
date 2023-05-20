@@ -30,7 +30,8 @@ bool fileTypeDetector(string file_name){
 
 int main()
 {
-    string input_file_name="SourceCodeJava.java";
+    string input_file_name;
+    input_file_name="SourceCodeJava.java";
     // char *input_file_name;
 
     // printf("Enter input file name: ");
