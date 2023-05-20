@@ -4,6 +4,7 @@
 #include "MethodLevelLOC.h"
 #include "CyclomaticComplexity.h"
 #include "ComplexityAnalyzer.h"
+#include "BuildingControlFlowGraph.h"
 
 using namespace std;
 
@@ -47,4 +48,5 @@ void executeCalculation(string file_name){
     calcComplexity(file_name);
     LOCResultPrinter();
     detailedResultPrinter();
+    createControlFlowGraph();
 }
