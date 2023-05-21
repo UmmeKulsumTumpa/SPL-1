@@ -1,100 +1,52 @@
-public class SourceCodeJava
+public class SourceCode2
 {
-    String name;
-    String address;
-    int ID;
-    public SourceCodeJava(int ID)
+    public static void main(String[] args) 
 {
-        this.ID=ID;
+        String str=                      ;
+        System.out.println(str);
 }
-    public SourceCodeJava(String name)
+    void cfg()
 {
-        this.name=name;
+        System.out.println();
 }
-    public SourceCodeJava(String name, String address)
+    void func1()
 {
-        this.name=name;
-        this.address=address;
-}
-    public static int summationOfTwoNumbers(int a, int b)
+        if(12==13)
 {
-        if(a>=b && b!=0)
-{
-            System.out.println(         );
-}
-        return a+b;        
-}
-    public static boolean isGreater(int a, int b)
-{
-        if(a!=b && b!=11 || a!=12)
-{
-System.out.println(  );
-}
-        return (a>=b) ? true : false;
-}
-    private static void check()
-{
-        if(11<12 && 13>12)
-{
-}
-        if(14-2>0)
-{
-            System.out.println();
+System.out.println();
 }
 }
-    public static void main(String[] args)
-{
-        System.out.println(       );
-        System.out.println(                            );
-        System.out.println(                                                       );
-        int a=10, b=20;                   
-        int sum=summationOfTwoNumbers(a,b);
-        System.out.printf(                ,a,b,sum);
-        boolean flag=isGreater(a, b);
-        if(flag==true)
-{
-            System.out.printf(                         , a, b);
-}
-        else
-{
-            System.out.printf(                         , a, b);
-}
-        if(a!=10 || b==56 && a!=b)
+    void func2()
 {
 }
-        else if(b==2)
+    void func3(int a, int b)
 {
+        for(int i=0;i<a;i++)
+{
+            System.out.println(    );
 }
-        else if(a>0)
+        for(int i=0;i<10;i++)
 {
-            System.out.println();
+            if(i==b)
+{
+                System.out.println();
+                if(i+a==b)
+{
+                    System.out.println();
+}
+                else
+{
+                    System.out.println(a);
 }
 }
-    public static void msg()
+else if(a+b<0)
 {
-        System.out.println(           );
-        if(12>0)
-{
-            System.out.println();
+                System.out.println(a+b);
 }
-        if(-12<=0 || -8<0)
+else
 {
-            System.out.println();
+                System.out.println();
 }
-}
-    private void testMethod(int a, int b)
-{
-        if(a>b && a!=b)
-{
-}
-        else if(a==b || b<14)
-{
-}
-        if(a<=b)
-{
-}
-        else if(b>a)
-{
 }
 }
 }
