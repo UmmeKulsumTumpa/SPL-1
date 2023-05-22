@@ -311,14 +311,14 @@ void LOCResultPrinter(void)
 
     printf("\n\n");
 
-    printf("Total Physical Lines: %d\n", physical_line);
-    printf("Total Blank Lines: %d\n", blank_line);
-    printf("Total Logical Statements: %d\n", logical_statements);
-    printf("Number of only Statement Line: %d\n", only_statement_line);
-    printf("Number of only Comment Line: %d\n", only_comment_line);
-    printf("Number of both Comment and Statement Line: %d\n", comment_and_statement_line);
-    printf("Total number of Methods: %d\n", total_method - total_constructor_number);
-    printf("Total number of Constructors: %d\n\n\n", total_constructor_number);
+    printf("\tTotal Physical Lines: %d\n", physical_line);
+    printf("\tTotal Blank Lines: %d\n", blank_line);
+    printf("\tTotal Logical Statements: %d\n", logical_statements);
+    printf("\tNumber of only Statement Line: %d\n", only_statement_line);
+    printf("\tNumber of only Comment Line: %d\n", only_comment_line);
+    printf("\tNumber of both Comment and Statement Line: %d\n", comment_and_statement_line);
+    printf("\tTotal number of Methods: %d\n", total_method - total_constructor_number);
+    printf("\tTotal number of Constructors: %d\n", total_constructor_number);
 }
 
 int CalcLOC(string file_name)
