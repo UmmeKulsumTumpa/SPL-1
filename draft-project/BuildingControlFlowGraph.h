@@ -35,7 +35,7 @@ void connectNodalStatementsAndBuildGraph(){
         control_graph[i][i+1]=1;
     }
 
-    for(i=0;i<lines.size();i++){
+    for(i=0;i<lines.size();i++){/*************************** iterate lines *******************/
         
         for(int ele:do_while_store){
             if(ele==i){
@@ -55,7 +55,7 @@ void connectNodalStatementsAndBuildGraph(){
             }
         }
 
-        for(int j=0;j<=per_line.size();j++){
+        for(int j=0;j<=per_line.size();j++){/******************** iterate over each line of lines *********************/
             // end of any word in a line
             if(j==per_line.size() || per_line[j]==' ' || per_line[j]=='(' || per_line[j]==')' || per_line[j]=='{' || per_line[j]=='}' || per_line[j]==';'){
                 
@@ -83,7 +83,7 @@ void connectNodalStatementsAndBuildGraph(){
                     }
                 }
 
-                // check for while/for
+                /*-------------------------------------------------- control flow for 'while' and 'for' ---------------------------------------*/
                 if(word=="while" || word=="for"){
                     start=i+1;
                     // check for the closing brace
@@ -101,6 +101,7 @@ void connectNodalStatementsAndBuildGraph(){
                         control_graph[closing_curly_braces[start]][i+1]=1;
                     }
                 }
+                /*-------------------------------------------------- control flow for 'do' ---------------------------------------*/
                 else if(word=="do"){
                     start=i+1;
                     while(closing_curly_braces[start]==0){
@@ -148,6 +149,7 @@ void connectNodalStatementsAndBuildGraph(){
                         }
                     }
                 }
+                /*-------------------------------------------------- control flow for 'continue' ---------------------------------------*/
                 else if(word=="continue"){
                     loop_back=loop_store.back();
                     if(closing_curly_braces[loop_back]==0){
@@ -157,6 +159,7 @@ void connectNodalStatementsAndBuildGraph(){
                         control_graph[i+1][loop_back-1]=1;
                     }
                 }
+                /*-------------------------------------------------- control flow for 'break' ---------------------------------------*/
                 else if(word=="break"){
                     loop_back=loop_store.back();
                     if(closing_curly_braces[loop_back]==0){
@@ -166,6 +169,7 @@ void connectNodalStatementsAndBuildGraph(){
                         control_graph[i+1][closing_curly_braces[loop_back]+1]=1;
                     }
                 }
+                /*-------------------------------------------------- control flow for 'if' ---------------------------------------*/
                 else if(word=="if"){
                     
                     int next_else=i, track, idx;
@@ -198,21 +202,116 @@ void connectNodalStatementsAndBuildGraph(){
                         next_else=track;
                     }
                 }
+                /*-------------------------------------------------- control flow for 'else' ---------------------------------------*/
                 else if(word=="else"){
                     j+=2;
                 }
+                /*-------------------------------------------------- control flow for 'switch' ---------------------------------------*/
                 else if(word=="switch"){
                     bool flag_more_case=true;
-                    
+                    int outgoing_node=i+2; // flow is from outgoing->incoming
+                    int incoming_node=i;
+                    int track_last=closing_curly_braces[outgoing_node];
+                    // remove nodes from graph
+                    control_graph[outgoing_node-1][outgoing_node]=0;
+                    control_graph[outgoing_node][outgoing_node+1]=0;
+
+                    while(flag_more_case){
+
+                        string temp_word="";
+                        string compare=lines[outgoing_node];
+                        flag_more_case=false;
+
+                        for(int idx=0;idx<=compare.size();idx++){
+                            
+                            if(idx==compare.size() || compare[idx]==' ' || compare[idx]=='(' || compare[idx]==')' || compare[idx]=='{' || compare[idx]=='}' || compare[idx]==':'){
+                                
+                                if(temp_word=="case" || temp_word=="default"){
+                                    flag_more_case=true;
+                                    temp_word="";
+
+                                    if(outgoing_node!=i+2){
+                                        control_graph[incoming_node+1][outgoing_node+1]=1;
+                                    }
+
+                                    incoming_node=outgoing_node;
+                                    break;
+                                }
+                                else if(temp_word=="break"){
+                                    flag_more_case=true;
+                                    temp_word="";
+                                    control_graph[outgoing_node+1][track_last+1]=1;
+                                    break;
+                                }
+                                else{
+                                    temp_word="";
+                                }
+                            }
+                            else{
+                                temp_word+=compare[idx];
+                            }
+                        }
+
+                        outgoing_node++;
+                        if(outgoing_node==track_last){ // reached the end of switch block
+                            break;
+                        }
+                    }
+
+                    i=track_last+1;
+                }
+                /*-------------------------------------------------- control flow for 'try' ---------------------------------------*/
+                else if(word=="try"){
+                    int next_catch=i;
+                    bool has_more_catch=true;
+                    int incoming_node;
+
+                    while(has_more_catch){
+
+                        incoming_node=closing_curly_braces[next_catch+2];
+                        string temp_word="";
+                        string compare=lines[incoming_node];
+                        has_more_catch=false;
+
+                        for(int idx=0;idx<=compare.size();idx++){
+
+                            if(idx==compare.size() || compare[idx]==' ' || compare[idx]=='(' || compare[idx]==')' || compare[idx]=='{' || compare[idx]=='}'){
+
+                                if(temp_word=="catch"){
+                                    has_more_catch=true;
+                                    temp_word="";
+
+                                    // add nodes to graph
+                                    control_graph[i+1][incoming_node+1]=1;
+                                    control_graph[incoming_node][incoming_node+1]=0;
+                                    break;
+                                }
+                                else if(temp_word=="finally"){
+                                    temp_word="";
+                                    // add nodes to graph
+                                    control_graph[i+1][incoming_node+1]=1;
+                                    break;
+                                }
+                                else{
+                                    temp_word="";
+                                }
+                            }
+                            else{
+                                temp_word+=compare[idx];
+                            }
+                        }
+
+                        next_catch=incoming_node;
+                    }
                 }
                 // reset the word to empty string
                 word="";
-            }
+            }/***************************** end of each probable found word per line ***************************8*/
             else{
                 word+=per_line[j];
             }
-        }
-    }
+        }/****************************** end of iterate over each line of lines *****************************/
+    }/**************************** end of iterate lines *************************/
 }
 
 void closingCurlyBracesProcessor(){
@@ -228,6 +327,7 @@ void closingCurlyBracesProcessor(){
             if(ele=='{'){
                 opening_curly_braces[idx+1]=1;
                 open_brace_store.push_back(idx+1);
+                //cout << idx+1 << "\n";
             }
             else if(ele=='}'){
                 idx_open_brace=open_brace_store.back();
@@ -261,8 +361,8 @@ void segmentationOfCommentFreeFile(){
     getline(input_file, per_line_in_file);
 
     while (not input_file.eof()){
-        getline(input_file, per_line_in_file);
         lines.push_back(per_line_in_file);
+        getline(input_file, per_line_in_file);
     }
 
     input_file.close();
@@ -292,6 +392,21 @@ void simplificationOfCommentFreeFile(){
         }
 
         if(per_line_in_file=="" || only_space){
+            getline(input_file, per_line_in_file);
+            continue;
+        }
+
+        bool has_braces=false;
+        for(char ele:per_line_in_file){
+            if(ele=='{' || ele=='}'){
+                has_braces=true;
+                break;
+            }
+        }
+
+        if(!has_braces){
+            output_file<<per_line_in_file;
+            output_file<<"\n";
             getline(input_file, per_line_in_file);
             continue;
         }
@@ -347,6 +462,10 @@ void createControlFlowGraph(){
     openingCurlyBracesProcessor();
     connectNodalStatementsAndBuildGraph();
 
+    // for(auto ele:lines){
+    //     cout << ele << "\n";
+    // }
+
     for(int i=1;i<=lines.size();i++){
         cout << i << " -> ";
         for(int j=1;j<=lines.size();j++){
@@ -358,6 +477,9 @@ void createControlFlowGraph(){
     }
 
     // for(int i=0;i<lines.size();i++){
+    //     if(closing_curly_braces[i]==0){
+    //         continue;
+    //     }
     //     cout << "opening: " << i << " closing: " << closing_curly_braces[i] << "\n";
     // }
 }
