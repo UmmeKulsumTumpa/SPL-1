@@ -115,13 +115,13 @@ void nameAssign (string name ,int method_number) {
 
 void locMethodBasedResult(int i){
 
-    cout<<"Method Name: "<<methodResult[i].name<<"\n";
-    printf("Total Physical Lines: %d\n", methodResult[i].physical_line );
-    printf("Total Blank Lines: %d\n", methodResult[i].blank_line_method);
-    printf("Total Lines of Logical Statement: %d\n", methodResult[i].total_logical_statements);
-    printf("Number of only Comment Lines: %d\n", methodResult[i].only_comment_line_method);
-    printf("Number of only Statement Lines: %d\n",  methodResult[i].only_statment_lines);
-    printf("Number of both Comment and Statement Lines: %d\n", methodResult[i].comment_and_statement_lines);
+    cout<<"\n\tMethod Name: "<<methodResult[i].name<<"\n\n";
+    printf("\t\tTotal Physical Lines: %d\n", methodResult[i].physical_line );
+    printf("\t\tTotal Blank Lines: %d\n", methodResult[i].blank_line_method);
+    printf("\t\tTotal Lines of Logical Statement: %d\n", methodResult[i].total_logical_statements);
+    printf("\t\tNumber of only Comment Lines: %d\n", methodResult[i].only_comment_line_method);
+    printf("\t\tNumber of only Statement Lines: %d\n",  methodResult[i].only_statment_lines);
+    printf("\t\tNumber of both Comment and Statement Lines: %d\n", methodResult[i].comment_and_statement_lines);
 
 }
 
