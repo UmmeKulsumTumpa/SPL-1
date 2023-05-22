@@ -17,8 +17,13 @@ extern void locMethodBasedResult(int i);
 
 /*++++++++++++++++++++++++++++ variables & methods of ComplexityAnalyzer.h ++++++++++++++++++++++++++*/
 extern void printComplexityPerMethod(int index_number);
+extern void calculateAverageComplexity();
 extern float average_complexity;
 extern vector<node> method_tracer;
+
+/******************* Methods & Variables of BuildingControlFlowGraph.h *********************/
+extern void displayControlFlowGraph();
+extern int getComplexityCalculatedByCFG();
 
 /****************************** Methods to be used *******************************/
 void detailedResultPrinter();
@@ -57,7 +62,8 @@ void userMenuProvider(string file_name){
         printf("\t1. Overall Metric Result\n");
         printf("\t2. MethodWise Metric Result\n");
         printf("\t3. WMC Result\n");
-        printf("\t4. Exit\n");
+        printf("\t4. Display The CFG\n");
+        printf("\t5. Exit\n");
         printf("\n\t-> Enter your response: ");
 
         cin >> key_response;
@@ -71,12 +77,15 @@ void userMenuProvider(string file_name){
         else if(key_response=="3"){
             WMCResultPrinter();
         }
-        else if(key_response!="4"){
+        else if(key_response=="4"){
+            displayControlFlowGraph();
+        }
+        else if(key_response!="5"){
             printf("\n\tPlease check the user menu to select a valid response\n\n");
         }
 
     }
-    while(key_response!="4");
+    while(key_response!="5");
 
     printf("\n\n");
 }
@@ -84,6 +93,9 @@ void userMenuProvider(string file_name){
 void overAllResultPrinter(){
     printf("\n\n\t*** Displaying OverAll Metric Result ***\n\n");
     LOCResultPrinter();
+    int temp_complexity=getComplexityCalculatedByCFG();
+    int actual_complexity=max((int)average_complexity, temp_complexity);
+    printf("\tAverage Complexity: %d\n", actual_complexity);
     printf("\n\n");
 }
 
@@ -108,5 +120,6 @@ void executeCalculation(string file_name){
     //LOCResultPrinter();
     //detailedResultPrinter();
     createControlFlowGraph();
-    //userMenuProvider(file_name);
+    calculateAverageComplexity();
+    userMenuProvider(file_name);
 }
