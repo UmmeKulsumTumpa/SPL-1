@@ -15,6 +15,8 @@ vector<int>closing_curly_braces(MAX_SIZE);
 vector<int>opening_curly_braces(MAX_SIZE);
 int control_graph[MAX_SIZE][MAX_SIZE];
 vector<int>control_graph_list[MAX_SIZE];
+int total_edge;
+int total_node;
 
 struct graph_node{
 
@@ -23,6 +25,7 @@ struct graph_node{
     bool constructor=false;
     string name;
     vector<int> count_return;
+    vector<int> calling_line;
 
 } temp_graph_node;
 
@@ -39,8 +42,98 @@ void methodAndConstructorSeparatorOfSimplifiedFile();
 void setMethodAndConstructorName();
 void setMethodAndConstructorFlag();
 void returnStatementProcessor();
+void methodCallingAndRecusionProcessor();
+void findMethodCallingLines(int idx);
+void totalNodeAndEdgeCounter();
+void displayControlFlowGraph();
+int getComplexityCalculatedByCFG();
 
 /*********** Method definations ***********/
+
+int getComplexityCalculatedByCFG(){
+    int temp_complexity=total_edge-total_node+2;
+    return temp_complexity;
+}
+
+void displayControlFlowGraph(){
+    
+    int temp_complexity=total_edge-total_node+2;
+    printf("\n\n\t*** Displaying The CFG as Adjacency List ***\n\n");
+    for(int i=1;i<=lines.size();i++){
+        printf("\t\t%4d -> ", i);
+        for(int j=1;j<=lines.size();j++){
+            if(control_graph[i][j]){
+                printf("%4d ", j);
+            }
+        }
+        cout << "\n";
+    }
+    printf("\n\tTotal Number of Nodes of the CFG: %d", total_node);
+    printf("\n\tTotal Number of Edges of the CFG: %d\n", total_edge);
+}
+
+void totalNodeAndEdgeCounter(){
+
+    total_edge=0;
+    total_node=lines.size();
+
+    for(int i=0;i<=total_node;i++){
+        for(int j=0;j<=total_node;j++){
+            if(control_graph[i][j]){
+                total_edge++;
+            }
+        }
+    }
+}
+
+void findMethodCallingLines(int idx){
+
+    int len=lines.size();
+    int start_line=simplified_method_tracer[idx].start_line;
+    string temp_method_name=simplified_method_tracer[idx].name;
+    // the first line of lines is skipped intentionally
+    // because we may have a construction collision with class name
+    for(int i=1;i<len;i++){
+        if((i+1)!=start_line and lines[i].find(temp_method_name) != string::npos){
+            simplified_method_tracer[idx].calling_line.push_back(i+1);
+        }
+    }
+}
+
+void methodCallingAndRecusionProcessor(){
+
+    int len_tracer=simplified_method_tracer.size();
+    for(int i=0;i<len_tracer;i++){
+        findMethodCallingLines(i);
+    }
+
+    for(int i=0;i<len_tracer;i++){
+
+        vector<int>temp_caller=simplified_method_tracer[i].calling_line;
+        vector<int>temp_return=simplified_method_tracer[i].count_return;
+        int start_line=simplified_method_tracer[i].start_line;
+        int last_line=simplified_method_tracer[i].finish_line;
+
+        for(int ele : temp_caller){ // caller line and method start line has an edge
+            control_graph[ele][start_line]=1;
+        }
+
+        for(int return_ : temp_return){ // only for methods as constructor has no return statement
+            
+            for(int caller_ : temp_caller){ // every return statement backs flow to its caller so
+                                            // return -> caller_line creates an edge
+                control_graph[return_][caller_]=1;
+            }
+        }
+
+        if(simplified_method_tracer[i].constructor){ //-------------------------for constructors---------------------------
+            
+            for(int caller_ : temp_caller){ // and edge from constructor_end -> caller_line
+                control_graph[last_line][caller_]=1;
+            }
+        }
+    }
+}
 
 void returnStatementProcessor(){
 
@@ -54,11 +147,25 @@ void returnStatementProcessor(){
             
             if(lines[j-1].find("return ") != string::npos){ // for any return type
                 simplified_method_tracer[i].count_return.push_back(j);
+                control_graph[j][j+1]=0; // return has no relation with the next statement
             }
             
             if(lines[j-1].find("return;") != string::npos){ // for void return type
                 simplified_method_tracer[i].count_return.push_back(j);
+                control_graph[j][j+1]=0;
             }
+        }
+    }
+
+    // now cut the edge from constructor
+    for(int i=0;i<tracer_len;i++){
+        
+        if(simplified_method_tracer[i].constructor){
+            
+            int start=simplified_method_tracer[i].start_line;
+            int finish=simplified_method_tracer[i].finish_line;
+
+            control_graph[finish][finish+1]=0;
         }
     }
 }
@@ -136,7 +243,10 @@ void connectNodalStatementsAndBuildGraph(){
     line_size++;
     int i, start, loop_back=0;
     string per_line, word="", word_check="";
-    vector<int> loop_store, case_store, switch_store, do_while_store; 
+    vector<int> loop_store, case_store, switch_store, do_while_store;
+
+    // initialize the graph before filling with edges
+    memset(control_graph, 0, sizeof(control_graph)); 
 
     // every statement has a connection to next statement
     for(int i=1;i<line_size-1;i++){
@@ -572,19 +682,14 @@ void createControlFlowGraph(){
     connectNodalStatementsAndBuildGraph();
     methodAndConstructorSeparatorOfSimplifiedFile();
     returnStatementProcessor();
+    methodCallingAndRecusionProcessor();
+    totalNodeAndEdgeCounter();
+
+    // cout << "\n\nTotal node: " << total_node;
+    // cout << "\nTotal edge: " << total_edge << "\n";
 
     // for(auto ele:lines){
     //     cout << ele << "\n";
-    // }
-
-    // for(int i=1;i<=lines.size();i++){
-    //     cout << i << " -> ";
-    //     for(int j=1;j<=lines.size();j++){
-    //         if(control_graph[i][j]){
-    //             cout << j << " ";
-    //         }
-    //     }
-    //     cout << "\n";
     // }
 
     // for(int i=0;i<lines.size();i++){
@@ -595,12 +700,16 @@ void createControlFlowGraph(){
     // }
 
     for(int i=0;i<simplified_method_tracer.size();i++){
-        cout << simplified_method_tracer[i].name << " " << simplified_method_tracer[i].constructor << "\t\t";
-        cout << simplified_method_tracer[i].start_line << " " << simplified_method_tracer[i].finish_line << "\n";
-        cout << "return at line: ";
-        for(auto ele:simplified_method_tracer[i].count_return){
-            cout << ele << " ";
-        }
-        cout << "\n\n";
+        // cout << simplified_method_tracer[i].name << " " << simplified_method_tracer[i].constructor << "\t\t";
+        // cout << simplified_method_tracer[i].start_line << " " << simplified_method_tracer[i].finish_line << "\n";
+        // cout << "return at line: ";
+        // for(auto ele:simplified_method_tracer[i].count_return){
+        //     cout << ele << " ";
+        // }
+        // cout << "caller_lines: ";
+        // for(auto ele:simplified_method_tracer[i].calling_line){
+        //     cout << ele << " ";
+        // }
+        // cout << "\n\n";
     }
 }
