@@ -3,6 +3,10 @@ using namespace std;
 
 extern string comment_free_file;
 
+/*************** Methods and Variables of ComplexityAnalyzer.h *******************/
+extern string getMethodNameFollowedBySequence(int idx);
+extern bool getTypeMethodOrConstructorBySequence(int idx);
+
 /******************* Variables to be used ************/
 const int MAX_SIZE=3003;
 string simplified_file="simplifiedFile.txt";
@@ -12,6 +16,18 @@ vector<int>opening_curly_braces(MAX_SIZE);
 int control_graph[MAX_SIZE][MAX_SIZE];
 vector<int>control_graph_list[MAX_SIZE];
 
+struct graph_node{
+
+    int start_line;
+    int finish_line;
+    bool constructor=false;
+    string name;
+    vector<int> count_return;
+
+} temp_graph_node;
+
+vector<graph_node> simplified_method_tracer;
+
 /************* Methods to be used *************/
 void createControlFlowGraph();
 void segmentationOfCommentFreeFile();
@@ -19,8 +35,100 @@ void simplificationOfCommentFreeFile();
 void closingCurlyBracesProcessor();
 void openingCurlyBracesProcessor();
 void connectNodalStatementsAndBuildGraph();
+void methodAndConstructorSeparatorOfSimplifiedFile();
+void setMethodAndConstructorName();
+void setMethodAndConstructorFlag();
+void returnStatementProcessor();
 
 /*********** Method definations ***********/
+
+void returnStatementProcessor(){
+
+    int tracer_len=simplified_method_tracer.size();
+    for(int i=0;i<tracer_len;i++){
+
+        int first_line=simplified_method_tracer[i].start_line;
+        int last_line=simplified_method_tracer[i].finish_line;
+        
+        for(int j=first_line+2;j<last_line;j++){
+            
+            if(lines[j-1].find("return ") != string::npos){ // for any return type
+                simplified_method_tracer[i].count_return.push_back(j);
+            }
+            
+            if(lines[j-1].find("return;") != string::npos){ // for void return type
+                simplified_method_tracer[i].count_return.push_back(j);
+            }
+        }
+    }
+}
+
+void setMethodAndConstructorFlag(){
+
+    int len=simplified_method_tracer.size();
+    for(int i=0;i<len;i++){
+        simplified_method_tracer[i].constructor=getTypeMethodOrConstructorBySequence(i);
+    }
+}
+
+void setMethodAndConstructorName(){
+
+    int len=simplified_method_tracer.size();
+    for(int i=0;i<len;i++){
+        simplified_method_tracer[i].name=getMethodNameFollowedBySequence(i);
+    }
+}
+
+void methodAndConstructorSeparatorOfSimplifiedFile(){
+
+    stack<char> double_quote;
+    stack<char> first_bracket;
+    int method_first_line;
+    simplified_method_tracer.clear();
+    int lines_size=lines.size();
+
+    for (int i = 0; i < lines_size; i++) {
+        
+        int str_len = lines[i].size();
+
+        for (int j = 0; j < str_len; j++) {
+
+            if (first_bracket.size() == 2 and double_quote.empty() && lines[i][j] == '{') {
+                temp_graph_node.start_line = method_first_line;
+                double_quote.push('{');
+            }
+            else if (first_bracket.size() == 2 and double_quote.size() == 1 && lines[i][j] == '}') {
+                
+                temp_graph_node.finish_line = i+1;
+                //cout << "strart " << temp_node.start_line << " finish " << temp_node.finish_line << "\n";
+                simplified_method_tracer.push_back(temp_graph_node);
+                double_quote.pop();
+                first_bracket.pop();
+                first_bracket.pop();
+
+            }
+            else if (lines[i][j] == '{' and first_bracket.empty()==false) {
+                double_quote.push('{');
+                //cout << i << " " << j << "\n";
+            }
+            else if (lines[i][j] == '}' and first_bracket.empty()==false) {
+                double_quote.pop();
+            }
+            else if (first_bracket.empty() and double_quote.empty() and lines[i][j] == '(') {
+                first_bracket.push('(');
+                method_first_line=i+1;
+            }
+            else if (first_bracket.size() == 1 and double_quote.empty() and lines[i][j] == ')') {
+                first_bracket.push(')');
+            }
+        }
+        //cout << "line " << i << " {} size: " << double_quote.size() << " () size: " << first_bracket.size() << "\n";
+
+    }
+
+    setMethodAndConstructorFlag();
+    setMethodAndConstructorName();
+}
 
 void connectNodalStatementsAndBuildGraph(){
 
@@ -290,6 +398,7 @@ void connectNodalStatementsAndBuildGraph(){
                                     temp_word="";
                                     // add nodes to graph
                                     control_graph[i+1][incoming_node+1]=1;
+                                    control_graph[i][incoming_node+1]=1; // finally block executes no matter what
                                     break;
                                 }
                                 else{
@@ -461,20 +570,22 @@ void createControlFlowGraph(){
     closingCurlyBracesProcessor();
     openingCurlyBracesProcessor();
     connectNodalStatementsAndBuildGraph();
+    methodAndConstructorSeparatorOfSimplifiedFile();
+    returnStatementProcessor();
 
     // for(auto ele:lines){
     //     cout << ele << "\n";
     // }
 
-    for(int i=1;i<=lines.size();i++){
-        cout << i << " -> ";
-        for(int j=1;j<=lines.size();j++){
-            if(control_graph[i][j]){
-                cout << j << " ";
-            }
-        }
-        cout << "\n";
-    }
+    // for(int i=1;i<=lines.size();i++){
+    //     cout << i << " -> ";
+    //     for(int j=1;j<=lines.size();j++){
+    //         if(control_graph[i][j]){
+    //             cout << j << " ";
+    //         }
+    //     }
+    //     cout << "\n";
+    // }
 
     // for(int i=0;i<lines.size();i++){
     //     if(closing_curly_braces[i]==0){
@@ -482,4 +593,14 @@ void createControlFlowGraph(){
     //     }
     //     cout << "opening: " << i << " closing: " << closing_curly_braces[i] << "\n";
     // }
+
+    for(int i=0;i<simplified_method_tracer.size();i++){
+        cout << simplified_method_tracer[i].name << " " << simplified_method_tracer[i].constructor << "\t\t";
+        cout << simplified_method_tracer[i].start_line << " " << simplified_method_tracer[i].finish_line << "\n";
+        cout << "return at line: ";
+        for(auto ele:simplified_method_tracer[i].count_return){
+            cout << ele << " ";
+        }
+        cout << "\n\n";
+    }
 }
