@@ -34,7 +34,8 @@ int main()
     input_file_name="SourceCodeJava.java";
     // char *input_file_name;
 
-    // printf("Enter input file name: ");
+    printf("\n\n\t\t\t*** WELCOME to CMC ***\n\n\n");
+    // printf("\tEnter input file name: ");
     // cin>>input_file_name;
 
     bool flag=fileTypeDetector(input_file_name);
@@ -45,6 +46,8 @@ int main()
     }
 
     executeCalculation(input_file_name);
+
+    printf("\n\t\t\t*** THANK YOU ***\n\n\n");
 
     return 0;
 }
