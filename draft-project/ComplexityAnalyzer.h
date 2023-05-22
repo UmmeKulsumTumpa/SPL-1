@@ -41,9 +41,20 @@ void printComplexityPerMethod(int index_number);
 int countPredicates(int first_line, int last_line);
 int countDoubleCharacaterPredicates(int first_line, int last_line);
 int countSingleCharacterPredicates(int first_line, int last_line);
+int loopAndSelectionStatementCounter(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
+string getMethodNameFollowedBySequence(int idx);
+bool getTypeMethodOrConstructorBySequence(int idx);
 
 /************ Methods definations **************/
+
+string getMethodNameFollowedBySequence(int idx){
+    return method_tracer[idx].name;
+}
+
+bool getTypeMethodOrConstructorBySequence(int idx){
+    return method_tracer[idx].constructor;
+}
 
 void printComplexityPerMethod(int index_number){
     printf("\t\tCyclomatic Complexity : %d\n\n", method_tracer[index_number].complexity);
@@ -51,14 +62,19 @@ void printComplexityPerMethod(int index_number){
 
 void calculateAverageComplexity(){
 
-    float average_complexity = 0.0;
-    int temp_total_method = method_tracer.size();
+    average_complexity = 0.0;
+    int method_and_constructor = method_tracer.size();
+    int temp_total_method = method_and_constructor - total_constructor_number;
 
-    for(int i=0; i<temp_total_method; i++) {
-        average_complexity += method_tracer[i].complexity;
+    for(int i=0; i<method_and_constructor; i++) {
+        if(method_tracer[i].constructor==false){
+            //average_complexity += method_tracer[i].complexity;
+            average_complexity=max(average_complexity, (float)method_tracer[i].complexity);
+        }
     }
 
-    average_complexity = average_complexity / (float)temp_total_method;
+    // average_complexity = average_complexity / (float)temp_total_method;
+    // cout << "average: " << average_complexity << "\n";
 
 }
 
@@ -66,125 +82,98 @@ void calculateAverageComplexity(){
 int countSingleCharacterPredicates(int first_line, int last_line) {
 
     int temp_complexity = 0;
-    int temp_complexity_inside_bracket=0;
-    bool found_open_parenthesis = false;  // Flag to track if an open parenthesis has been found
-    bool skip_single_predicate = false;  // Flag to track if a single character predicate should be skipped
 
-    // Iterate through each line within the specified range
-    for(int i = first_line; i <= last_line; i++) {
-
-        int temp_line_size = saved_file[i].size(); // Get the size of the current line
+    for (int i = first_line; i <= last_line; i++) {
+        int temp_line_size = saved_file[i].size() - 1; // We are checking one character at a time 
         
-        // Iterate through each character in the line
-        for(int j = 0; j < temp_line_size; j++) {
-
-            if (saved_file[i][j] == '(') {
-                
-                found_open_parenthesis = true;  // Set the flag when an open parenthesis is found
-                skip_single_predicate = false;  // Reset the flag when a new parenthesis is found
-
-            }
-            else if (found_open_parenthesis && saved_file[i][j] == ')') {
-                
-                if(skip_single_predicate==false){
-                    temp_complexity+=temp_complexity_inside_bracket;
-                }
-                found_open_parenthesis = false;
-                skip_single_predicate = false;
-                temp_complexity_inside_bracket=0;
-
-            }
-            else if (found_open_parenthesis) {
-                
-                // Check for specific combinations of characters and skip to the next iteration if matched
-                if(saved_file[i][j] == '=' && saved_file[i][j + 1] == '='){ 
-                    skip_single_predicate=true;
-                    continue;
-                }
-                else if(saved_file[i][j] == '>' && saved_file[i][j + 1] == '='){ 
-                    skip_single_predicate=true;
-                    continue;
-                }
-                else if(saved_file[i][j] == '<' && saved_file[i][j + 1] == '='){ 
-                    skip_single_predicate=true;
-                    continue;
-                }
-                else if(saved_file[i][j] == '!' && saved_file[i][j + 1] == '='){ 
-                    skip_single_predicate=true;
-                    continue;
-                }
-
-                // Skip the single character predicate if a two-character operator was found before it inside the first parenthesis
-                if (skip_single_predicate && (saved_file[i][j] == '<' || saved_file[i][j] == '>' || saved_file[i][j] == '!')) {
-                    continue;
-                }
-
-                if(temp_complexity_inside_bracket>0){
-                    continue;
-                }
-                
-                // Increment the complexity count if a single character predicate is found
-                else if(saved_file[i][j] == '<') {
-                    temp_complexity_inside_bracket++;
-                }
-                else if(saved_file[i][j] == '>') {
-                    temp_complexity_inside_bracket++;
-                }
-                else if(saved_file[i][j] == '!') {
-                    temp_complexity_inside_bracket++;
-                }
-
+        for (int j = 0; j < temp_line_size; j++) {
+            if (saved_file[i][j] == '>' && saved_file[i][j + 1] == '>') {
+                continue;
+            } 
+            else if (saved_file[i][j] == '>' && saved_file[i][j + 1] == '=') {
+                continue;
+            } 
+            else if (saved_file[i][j] == '<' && saved_file[i][j + 1] == '=') {
+                continue;
+            } 
+            else if (saved_file[i][j] == '<' && saved_file[i][j + 1] == '<') {
+                continue;
+            } 
+            else if (saved_file[i][j] == '!' && saved_file[i][j + 1] == '=') {
+                continue;
+            } 
+            else if (saved_file[i][j] == '<') {
+                temp_complexity++;
+            } 
+            else if (saved_file[i][j] == '>') {
+                temp_complexity++;
+            } 
+            else if (saved_file[i][j] == '!') {
+                temp_complexity++;
             }
         }
     }
 
-    // Return the final complexity count
     return temp_complexity;
 }
 
 int countDoubleCharacaterPredicates(int first_line, int last_line){
 
-    int temp_complexity = 0;  // Variable to store the complexity count
-    int temp_complexity_inside_bracket=0;
-    bool found_open_parenthesis = false;  // Flag to track if an open parenthesis has been found
+    int temp_complexity = 0;
 
-    for (int i = first_line; i <= last_line; i++) {  // Loop through the lines
+    for (int i = first_line; i <= last_line; i++) {
+        int temp_line_size = saved_file[i].size() - 1; // We are checking two characters at a time
         
-        int temp_line_size = saved_file[i].size();  // Get the size of the current line
-
-        for (int j = 0; j < temp_line_size; j++) {  // Loop through each character in the line
-
-            if (saved_file[i][j] == '(') {
-                found_open_parenthesis = true;  // Set the flag when an open parenthesis is found
-            }
-            else if (found_open_parenthesis && saved_file[i][j] == ')') {
-                // If an open parenthesis has been found and there are already two-character operators,
-                // increment complexity count and reset the flag
-                temp_complexity+=temp_complexity_inside_bracket;
-                found_open_parenthesis = false;
-                temp_complexity_inside_bracket=0;
-            }
-            else if (found_open_parenthesis && temp_complexity_inside_bracket == 0) {
-                // If an open parenthesis has been found and no two-character operators have been encountered yet,
-                // check for two-character operators and increment complexity count accordingly
-                if (saved_file[i][j] == '=' && saved_file[i][j + 1] == '=') {
-                    temp_complexity_inside_bracket++;
-                }
-                else if (saved_file[i][j] == '>' && saved_file[i][j + 1] == '=') {
-                    temp_complexity_inside_bracket++;
-                }
-                else if (saved_file[i][j] == '<' && saved_file[i][j + 1] == '=') {
-                    temp_complexity_inside_bracket++;
-                }
-                else if (saved_file[i][j] == '!' && saved_file[i][j + 1] == '=') {
-                    temp_complexity_inside_bracket++;
-                }
+        for (int j = 0; j < temp_line_size; j++) {
+            if (saved_file[i][j] == '=' && saved_file[i][j+1] == '=') {
+                temp_complexity++;
+            } 
+            else if (saved_file[i][j] == '>' && saved_file[i][j+1] == '=') {
+                temp_complexity++;
+            } 
+            else if (saved_file[i][j] == '<' && saved_file[i][j+1] == '=') {
+                temp_complexity++;
+            } 
+            else if (saved_file[i][j] == '!' && saved_file[i][j+1] == '=') {
+                temp_complexity++;
             }
         }
     }
 
-    return temp_complexity;  // Return the calculated complexity count
+    return temp_complexity;
+}
 
+int loopAndSelectionStatementCounter(int first_line, int last_line){
+
+    vector<string> required_keywords = {"if", "while", "for", "||", "&&"};
+    int temp_complexity=0;
+
+    for(int i=first_line;i<last_line;i++){
+
+        string word="";
+        string temp_line=saved_file[i];
+
+        for(int j=0;j<=temp_line.size();j++){
+
+            if(j==temp_line.size() || temp_line[j]==' ' || temp_line[j]=='(' || temp_line[j]==')' || temp_line[j]=='{' || temp_line[j]=='}' || temp_line[j]==';'){
+                //cout << word << " ";
+                for(string ele : required_keywords){
+                    if(word==ele){
+                        temp_complexity++;
+                        break;
+                    }
+                }
+
+                word="";
+            }
+            else{
+                word+=temp_line[j];
+            }
+        }
+    }
+    //cout << "in func: " << temp_complexity << "\n";
+
+    return temp_complexity;
 }
 
 int countPredicates(int first_line, int last_line){
@@ -193,6 +182,7 @@ int countPredicates(int first_line, int last_line){
     int double_char_logic_count=countDoubleCharacaterPredicates(first_line, last_line);
     int single_char_logic_count=countSingleCharacterPredicates(first_line, last_line);
     temp_complexity+=(double_char_logic_count+single_char_logic_count);
+    temp_complexity+=loopAndSelectionStatementCounter(first_line, last_line);
 
     // count each case in switch statements
     for(int i=first_line;i<last_line;i++){
@@ -200,6 +190,18 @@ int countPredicates(int first_line, int last_line){
             temp_complexity++;
         }
     }
+
+    // count each try-catch block
+    int try_complexity=0;
+    for(int i=first_line;i<last_line;i++){
+        if(saved_file[i].find("try") != string::npos){
+            try_complexity++;
+        }
+        if(saved_file[i].find("catch") != string::npos){
+            try_complexity++;
+        }
+    }
+    temp_complexity+=try_complexity;
 
     temp_complexity++; // CC=D+1
 
@@ -328,8 +330,11 @@ void saveInString(string file_name){
 }
 
 void totalConstructorCounter(){
+    
     total_constructor_number=0;
-    for(int i=0;i<total_method;i++){
+    int temp_total_method=method_tracer.size();
+    
+    for(int i=0;i<temp_total_method;i++){
         if(method_tracer[i].constructor){
             total_constructor_number++;
         }
