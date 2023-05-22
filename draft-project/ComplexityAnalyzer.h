@@ -46,7 +46,7 @@ string findStringBeforeFirstBrace(string line);
 /************ Methods definations **************/
 
 void printComplexityPerMethod(int index_number){
-    printf("Cyclomatic Complexity : %d\n\n", method_tracer[index_number].complexity);
+    printf("\t\tCyclomatic Complexity : %d\n\n", method_tracer[index_number].complexity);
 }
 
 void calculateAverageComplexity(){
