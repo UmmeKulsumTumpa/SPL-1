@@ -35,6 +35,7 @@ void displayFieldInfo(){
 
         itr++;
     }
+    printf("\n");
 }
 
 void fieldSeparatorFromString(){
@@ -179,7 +180,51 @@ void fieldSeparatorFromString(){
 }
 
 void saveMethodFreeLinesInString(){
-    method_free_lines=methodAndConstructorFreeFileCreate();
+    
+    vector<string> temp_store;
+    vector<string> draft_lines;
+    temp_store=methodAndConstructorFreeFileCreate();
+
+    // now separate lines by semicolons
+    string temp_line="";
+
+    for(int i=0;i<temp_store.size();i++){
+        
+        string per_line=temp_store[i];
+
+        for(int j=0;j<per_line.size();j++){
+            
+            if(per_line[j]==';'){// it will add a line to draft_lines
+                temp_line+=per_line[j];
+                draft_lines.push_back(temp_line);
+                temp_line="";
+            }
+            else{
+                temp_line+=per_line[j];
+            }
+        }
+    }
+
+    temp_line="";
+    for(int i=0;i<draft_lines.size();i++){
+
+        string temp_str="";
+        for(int j=0;j<draft_lines[i].size();j++){
+            
+            if(draft_lines[i][j]=='{'){
+                while(draft_lines[i][j]!='}'){
+                    j++;
+                }
+            }
+            else{
+                temp_str+=draft_lines[i][j];
+            }
+        }
+
+        method_free_lines.push_back(temp_str);
+    }
+
+    //method_free_lines=draft_lines;
 }
 
 void classFieldProcessor(){
@@ -187,7 +232,7 @@ void classFieldProcessor(){
     saveMethodFreeLinesInString();
     fieldSeparatorFromString();
 
-    // for(int i=0;i<method_free_lines.size();i++){
-    //     cout << method_free_lines[i] << "\n";
-    // }
+    for(int i=0;i<method_free_lines.size();i++){
+        cout << method_free_lines[i] << "\n";
+    }
 }
