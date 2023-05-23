@@ -232,7 +232,7 @@ void classFieldProcessor(){
     saveMethodFreeLinesInString();
     fieldSeparatorFromString();
 
-    for(int i=0;i<method_free_lines.size();i++){
-        cout << method_free_lines[i] << "\n";
-    }
+    // for(int i=0;i<method_free_lines.size();i++){
+    //     cout << method_free_lines[i] << "\n";
+    // }
 }
