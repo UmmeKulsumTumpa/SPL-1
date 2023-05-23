@@ -1,52 +1,71 @@
-public class SourceCode2
+public class SourceCode3
 {
+    static int n=1;
+    static int m=2;
+    ArrayList<Integer> intList=new ArrayList<>();
+    ArrayList<Integer> list2;
+    static void funcMethod()
+{
+        if(n==m)
+{
+            return;
+}
+        if(n<m)
+{
+            funcMethod();
+}
+        return;
+}
+    private int num1;
     public static void main(String[] args) 
 {
-        String str=                      ;
-        System.out.println(str);
-}
-    void cfg()
+        Scanner sc=new Scanner(System.in);
+        int b=0,c=1;
+        funcMethod();
+        try
 {
-        System.out.println();
+            int a=sc.nextInt();
 }
-    void func1()
-{
-        if(12==13)
-{
-System.out.println();
-}
-}
-    void func2()
+        catch(Exception e)
 {
 }
-    void func3(int a, int b)
+        finally
 {
-        for(int i=0;i<a;i++)
-{
-            System.out.println(    );
-}
-        for(int i=0;i<10;i++)
-{
-            if(i==b)
-{
-                System.out.println();
-                if(i+a==b)
-{
-                    System.out.println();
-}
-                else
-{
-                    System.out.println(a);
-}
-}
-else if(a+b<0)
-{
-                System.out.println(a+b);
-}
-else
+            if(true)
 {
                 System.out.println();
 }
+            if(b>c)
+{
+                System.out.println();
+}
+            else
+{
+                System.out.println(b);
 }
 }
+        return;
+}
+    int num2, num3=0, 
+    num4;
+    String name;
+    int[] intArray=
+{
+1, 8, 3, 4
+}
+,
+            Array2=
+{
+2,6,8
+}
+;
+    ArrayList<String> stringList=
+{
+      ,        
+}
+; float val1, val2=9.87;
+    void fun1()
+{
+}
+    Double balance=0.0, net_worth;
 }

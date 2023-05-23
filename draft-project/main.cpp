@@ -31,7 +31,7 @@ bool fileTypeDetector(string file_name){
 int main()
 {
     string input_file_name;
-    input_file_name="SourceCodeJava.java";
+    input_file_name="SourceCode3.java";
     // char *input_file_name;
 
     printf("\n\n\t\t\t*** WELCOME to CMC ***\n\n\n");

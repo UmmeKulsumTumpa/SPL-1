@@ -47,8 +47,39 @@ void findMethodCallingLines(int idx);
 void totalNodeAndEdgeCounter();
 void displayControlFlowGraph();
 int getComplexityCalculatedByCFG();
+vector<string> methodAndConstructorFreeFileCreate();
 
 /*********** Method definations ***********/
+
+vector<string> methodAndConstructorFreeFileCreate(){
+    
+    vector<string> method_free_lines;
+    int start;
+    int idx=2; // class name & its { won't include
+
+    for(int i=0;i<simplified_method_tracer.size();i++){
+
+        start=simplified_method_tracer[i].start_line;
+        //cout << start << "\t";
+
+        // now store from idx to start
+        while(idx<start-1){
+            method_free_lines.push_back(lines[idx]);
+            idx++;
+        }
+
+        idx=simplified_method_tracer[i].finish_line;
+        //cout << idx << "\n";
+    }
+
+    // if any field is declared below the last method
+    while(idx!=lines.size()-1){
+        method_free_lines.push_back(lines[idx]);
+        idx++;
+    }
+
+    return method_free_lines;
+}
 
 int getComplexityCalculatedByCFG(){
     int temp_complexity=total_edge-total_node+2;
@@ -200,6 +231,12 @@ void methodAndConstructorSeparatorOfSimplifiedFile(){
 
         for (int j = 0; j < str_len; j++) {
 
+            if(first_bracket.size()==2 and double_quote.empty() and lines[i][j]=='('){
+                first_bracket.pop();
+                method_first_line=i+1;
+                continue;
+            }
+
             if (first_bracket.size() == 2 and double_quote.empty() && lines[i][j] == '{') {
                 temp_graph_node.start_line = method_first_line;
                 double_quote.push('{');
@@ -224,6 +261,7 @@ void methodAndConstructorSeparatorOfSimplifiedFile(){
             else if (first_bracket.empty() and double_quote.empty() and lines[i][j] == '(') {
                 first_bracket.push('(');
                 method_first_line=i+1;
+                //cout << method_first_line << "\n";
             }
             else if (first_bracket.size() == 1 and double_quote.empty() and lines[i][j] == ')') {
                 first_bracket.push(')');

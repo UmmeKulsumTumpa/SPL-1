@@ -5,6 +5,7 @@
 #include "CyclomaticComplexity.h"
 #include "ComplexityAnalyzer.h"
 #include "BuildingControlFlowGraph.h"
+#include "FieldCounter.h"
 
 using namespace std;
 
@@ -24,6 +25,9 @@ extern vector<node> method_tracer;
 /******************* Methods & Variables of BuildingControlFlowGraph.h *********************/
 extern void displayControlFlowGraph();
 extern int getComplexityCalculatedByCFG();
+
+/**************** Methods & variables of FieldCounter.h *********************/
+extern void displayFieldInfo();
 
 /****************************** Methods to be used *******************************/
 void detailedResultPrinter();
@@ -63,7 +67,8 @@ void userMenuProvider(string file_name){
         printf("\t2. MethodWise Metric Result\n");
         printf("\t3. WMC Result\n");
         printf("\t4. Display The CFG\n");
-        printf("\t5. Exit\n");
+        printf("\t5. Display Fields Info\n");
+        printf("\t6. Exit\n");
         printf("\n\t-> Enter your response: ");
 
         cin >> key_response;
@@ -80,12 +85,15 @@ void userMenuProvider(string file_name){
         else if(key_response=="4"){
             displayControlFlowGraph();
         }
-        else if(key_response!="5"){
-            printf("\n\tPlease check the user menu to select a valid response\n\n");
+        else if(key_response=="5"){
+            displayFieldInfo();
+        }
+        else if(key_response!="6"){
+            printf("\n\n\tPlease check the user menu to select a valid response\n\n");
         }
 
     }
-    while(key_response!="5");
+    while(key_response!="6");
 
     printf("\n\n");
 }
@@ -121,5 +129,6 @@ void executeCalculation(string file_name){
     //detailedResultPrinter();
     createControlFlowGraph();
     calculateAverageComplexity();
+    classFieldProcessor();
     userMenuProvider(file_name);
 }

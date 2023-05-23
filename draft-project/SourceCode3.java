@@ -1,6 +1,6 @@
-
-
-
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Vector;
 
 public class SourceCode3{
 
@@ -52,7 +52,7 @@ public class SourceCode3{
 
     int[] intArray={1, 8, 3, 4},
             Array2={2,6,8};
-    ArrayList<String> stringList={      ,        }; float val1, val2=9.87;
+    ArrayList<String> stringList={"blue", "black"}; float val1, val2=9.87;
 
     void fun1(){
 

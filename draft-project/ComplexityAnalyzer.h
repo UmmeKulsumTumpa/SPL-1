@@ -355,6 +355,12 @@ void methodDetector(string file_name){
         int str_len = saved_file[i].size();
 
         for (int j = 0; j < str_len; j++) {
+
+            if(first_bracket.size()==2 and double_quote.empty() and saved_file[i][j]=='('){
+                first_bracket.pop();
+                method_first_line=i+1;
+                continue;
+            }
             // Check for the opening brace '{' when double quotes stack is empty and the first bracket stack size is 2
             if (first_bracket.size() == 2 and double_quote.empty() && saved_file[i][j] == '{') {
                 
