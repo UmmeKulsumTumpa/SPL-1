@@ -19,6 +19,9 @@ extern void locMethodBasedResult(int i);
 /*++++++++++++++++++++++++++++ variables & methods of ComplexityAnalyzer.h ++++++++++++++++++++++++++*/
 extern void printComplexityPerMethod(int index_number);
 extern void calculateAverageComplexity();
+extern string getMethodNameFollowedBySequence(int idx);
+extern bool getTypeMethodOrConstructorBySequence(int idx);
+extern int getComplexityPerMethod(int idx);
 extern float average_complexity;
 extern vector<node> method_tracer;
 
@@ -28,6 +31,8 @@ extern int getComplexityCalculatedByCFG();
 
 /**************** Methods & variables of FieldCounter.h *********************/
 extern void displayFieldInfo();
+extern void printAbstractMethods();
+extern bool has_abstract_method;
 
 /****************************** Methods to be used *******************************/
 void detailedResultPrinter();
@@ -41,9 +46,22 @@ void WMCResultPrinter();
 
 void WMCResultPrinter(){
 
+    printf("\n\n\t*** Displaying WMC Result ***\n\n");
+    int wmc_result=0;
+    
+    for(int i=0;i<total_method;i++){
+        bool is_constructor=getTypeMethodOrConstructorBySequence(i);
+        if(!is_constructor){
+            int temp_complexity=getComplexityPerMethod(i);
+            wmc_result+=temp_complexity;
+        }
+    }
+    printf("\tWMC = Σ(Complexity Weight of each Method)\n");
+    printf("\tWMC = %d\n\n\n", wmc_result);
 }
 
 void methodWiseMetricResultPrinter(){
+    
     printf("\n\n\t*** Displaying Method Level Result ***\n\n");
     for(int i=0;i<total_method;i++){
         if(method_tracer[i].constructor){
@@ -99,11 +117,17 @@ void userMenuProvider(string file_name){
 }
 
 void overAllResultPrinter(){
+    
     printf("\n\n\t*** Displaying OverAll Metric Result ***\n\n");
     LOCResultPrinter();
     int temp_complexity=getComplexityCalculatedByCFG();
     int actual_complexity=max((int)average_complexity, temp_complexity);
     printf("\tAverage Complexity: %d\n", actual_complexity);
+
+    // check if there exists any abstract method
+    if(has_abstract_method){
+        printAbstractMethods();
+    }
     printf("\n\n");
 }
 

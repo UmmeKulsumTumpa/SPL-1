@@ -6,17 +6,91 @@ extern vector<string> methodAndConstructorFreeFileCreate();
 
 /**************** Variables to be used ********************/
 vector<string> method_free_lines;
+vector<string> abstract_methods;
 //  datatype    name-of-fields
 //    ||           ||
 map<string, vector<string> > fields;
+bool has_abstract_method;
 
 /*************** Methods to be used ******************/
 void classFieldProcessor();
 void saveMethodFreeLinesInString();
 void fieldSeparatorFromString();
 void displayFieldInfo();
+void checkForAbstractMethod();
+vector<string> reSizingTheAbstractMethodNames();
+void printAbstractMethods();
+void displayAbstractMethodInfo();
 
 /*************** Method defination ****************/
+
+void displayAbstractMethodInfo(){
+    
+}
+
+void printAbstractMethods(){
+
+    vector<string> resized_names=reSizingTheAbstractMethodNames();
+    printf("\n\n\t*** Displaying Abstract Methods ***\n\n");
+
+    for(string name : resized_names){
+        cout << "\t\t" << name << "\n";
+    }
+    printf("\n\n");
+}
+
+vector<string> reSizingTheAbstractMethodNames(){
+
+    vector<string> resized_names;
+
+    for(int i=0;i<abstract_methods.size();i++){
+
+        string temp_name=abstract_methods[i];
+        string temp_resized_name="";
+
+        for(char ch : temp_name){
+            if(ch=='('){
+                break;
+            }
+            temp_resized_name+=ch;
+        }
+
+        resized_names.push_back(temp_resized_name);
+    }
+
+    return resized_names;
+}
+
+void checkForAbstractMethod(){
+
+    has_abstract_method=false;
+
+    map<string, vector<string> >::iterator itr;
+    itr=fields.begin();
+    while(itr != fields.end()){
+        
+        vector<string> names=itr->second;
+        for(string name : names){
+            
+            bool is_abstract_method=false;
+
+            for(char ch : name){
+                if(ch=='(' || ch==')'){
+                    has_abstract_method=true;
+                    is_abstract_method=true;
+                    break;
+                }
+            }
+
+            // if is abstract method, push to the vector
+            if(is_abstract_method){
+                abstract_methods.push_back(name);
+            }
+        }
+
+        itr++;
+    }
+}
 
 void displayFieldInfo(){
     
@@ -26,11 +100,27 @@ void displayFieldInfo(){
     itr=fields.begin();
     while(itr != fields.end()){
         
-        cout << "\n\tData Type: " << itr->first << "\n";
-        cout << "\tFields Name: \n";
-        for(int idx=0;idx<itr->second.size();idx++){
-            cout << "\t\t";
-            cout << itr->second[idx] << "\n";
+        bool is_abstract_method=false;
+        vector<string> names=itr->second;
+
+        for(string name : names){
+            
+            for(string abstract_method : abstract_methods){
+                if(abstract_method==name){
+                    is_abstract_method=true;
+                    break;
+                }
+            }
+        }
+
+        if(!is_abstract_method){
+
+            cout << "\n\tData Type: " << itr->first << "\n";
+            cout << "\tFields Name: \n";
+            for(int idx=0;idx<itr->second.size();idx++){
+                cout << "\t\t";
+                cout << itr->second[idx] << "\n";
+            }
         }
 
         itr++;
@@ -84,8 +174,13 @@ void fieldSeparatorFromString(){
         //cout << "data_type: " << data_type << "\n";
         word="";
         string word_comma="";
+        bool in_parenthesis=false;
 
         for(int j=temp_size-2; j>=0; j--){
+
+            if(temp_line[j]==')'){
+                in_parenthesis=true;
+            }
             
             if(temp_line[j]==' '){
                 
@@ -104,12 +199,20 @@ void fieldSeparatorFromString(){
             }
 
             if(temp_line[j]==','){
-                reverse(word_comma.begin(), word_comma.end());
-                temp_field_store.push_back(word_comma);
-                word_comma="";
+                
+                if(!in_parenthesis){ // it may be in abstract class parameter list, we won't add it
+                    reverse(word_comma.begin(), word_comma.end());
+                    //cout << "word_comma " << word_comma << "\n";
+                    temp_field_store.push_back(word_comma);
+                    word_comma="";
+                }
             }
             else{
                 word_comma+=temp_line[j];
+            }
+
+            if(temp_line[j]=='('){
+                in_parenthesis=false;
             }
         }
 
@@ -231,6 +334,15 @@ void classFieldProcessor(){
 
     saveMethodFreeLinesInString();
     fieldSeparatorFromString();
+    checkForAbstractMethod();
+
+    // for(auto itr : fields){
+    //     cout << itr.first << "\t";
+    //     for(auto ele : itr.second){
+    //         cout << ele << " ";
+    //     }
+    //     cout << "\n";
+    // }
 
     // for(int i=0;i<method_free_lines.size();i++){
     //     cout << method_free_lines[i] << "\n";

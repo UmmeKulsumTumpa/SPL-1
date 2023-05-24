@@ -45,8 +45,12 @@ int loopAndSelectionStatementCounter(int first_line, int last_line);
 string findStringBeforeFirstBrace(string line);
 string getMethodNameFollowedBySequence(int idx);
 bool getTypeMethodOrConstructorBySequence(int idx);
-
+int getComplexityPerMethod(int idx);
 /************ Methods definations **************/
+
+int getComplexityPerMethod(int idx){
+    return method_tracer[idx].complexity;
+}
 
 string getMethodNameFollowedBySequence(int idx){
     return method_tracer[idx].name;

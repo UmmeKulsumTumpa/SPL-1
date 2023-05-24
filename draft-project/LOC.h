@@ -317,7 +317,7 @@ void LOCResultPrinter(void)
     printf("\tNumber of only Statement Line: %d\n", only_statement_line);
     printf("\tNumber of only Comment Line: %d\n", only_comment_line);
     printf("\tNumber of both Comment and Statement Line: %d\n", comment_and_statement_line);
-    printf("\tTotal number of Methods: %d\n", total_method - total_constructor_number);
+    printf("\tTotal number of Non-abstract Methods: %d\n", total_method - total_constructor_number);
     printf("\tTotal number of Constructors: %d\n", total_constructor_number);
 }
 

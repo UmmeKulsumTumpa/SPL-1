@@ -31,12 +31,12 @@ bool fileTypeDetector(string file_name){
 int main()
 {
     string input_file_name;
-    input_file_name="SourceCode3.java";
+    // input_file_name="SourceCode5.java";
     // char *input_file_name;
 
     printf("\n\n\t\t\t*** WELCOME to CMC ***\n\n\n");
-    // printf("\tEnter input file name: ");
-    // cin>>input_file_name;
+    printf("\tEnter input file name: ");
+    cin>>input_file_name;
 
     bool flag=fileTypeDetector(input_file_name);
 
